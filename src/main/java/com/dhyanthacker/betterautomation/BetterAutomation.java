@@ -3,7 +3,9 @@ package com.dhyanthacker.betterautomation;
 import com.dhyanthacker.betterautomation.block.ModBlocks;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
+import com.dhyanthacker.betterautomation.item.ModItemGroups;
 import com.dhyanthacker.betterautomation.item.ModItems;
+import com.dhyanthacker.betterautomation.recipe.ModRecipes;
 import com.dhyanthacker.betterautomation.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 
@@ -21,11 +23,14 @@ public class BetterAutomation implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
+		ModItemGroups.registerItemGroups();
+
 		ModBlocks.registerModBlocks();
 		ModBlockEntities.registerBlockEntities();
 
 		ModScreenHandlers.registerScreenHandlers();
 
 		ModDataComponentTypes.registerDataComponentTypes();
+		ModRecipes.registerRecipes();
 	}
 }

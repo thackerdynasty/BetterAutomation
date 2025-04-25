@@ -17,6 +17,8 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SOLAR_PANEL);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ELECTRIC_FURNACE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_BLOCK);
     }
 
     @Override

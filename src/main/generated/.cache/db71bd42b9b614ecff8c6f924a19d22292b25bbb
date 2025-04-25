@@ -1,5 +1,13 @@
-// 1.21.1	2025-04-17T20:55:11.522217	BetterAutomation/Model Definitions
+// 1.21.1	2025-04-22T22:05:19.80951	BetterAutomation/Model Definitions
+84d1e4c2b036e77689484b859d4e03fcf5484269 assets/betterautomation/models/item/lithium.json
 d367cc1e71ab5e89be6a644aa13879682714ae24 assets/betterautomation/models/item/battery.json
+b360afd2bc44d1e5d1a8dcc34ad10dbacd653eed assets/betterautomation/blockstates/electric_furnace.json
+0d7675ddc52af88e5ca3174add6c40c1c0aadc00 assets/betterautomation/models/block/lithium_ore.json
 84100238722495a0e6d5aa70e4d7f25f06f95f4c assets/betterautomation/models/item/solar_panel.json
+9ae4ac22f6293f3eb327480027696c92589d1397 assets/betterautomation/blockstates/lithium_ore.json
 96c4df43feb1a1c401066a84a118c6c5c1c2f65e assets/betterautomation/blockstates/solar_panel.json
 23704fe3ef01c441d3222cf6842bfce6ec9c4b58 assets/betterautomation/models/block/solar_panel.json
+07809bb33f5ecb40b31481dd476918e184f73d4a assets/betterautomation/models/item/electric_furnace.json
+456bdcda2bc0f1318cf160f110d166dfb71f3d36 assets/betterautomation/models/item/raw_lithium.json
+51d537267bfbe220b1501273a754179a487909d9 assets/betterautomation/models/item/lithium_ore.json
+046de462a780d7eb00d5a2bd4ffeec11b554de6c assets/betterautomation/models/block/electric_furnace.json

@@ -4,5 +4,9 @@
   "block.betterautomation.solar_panel": "Solar Panel",
   "block.betterautomation.lithium_ore": "Lithium Ore",
   "item.betterautomation.raw_lithium": "Raw Lithium",
-  "item.betterautomation.lithium": "Lithium"
+  "item.betterautomation.lithium": "Lithium",
+  "itemgroup.betterautomation.ores": "BetterAutomation Ores",
+  "itemgroup.betterautomation.power": "BetterAutomation Power",
+  "block.betterautomation.electric_furnace": "Electric Furnace",
+  "itemgroup.betterautomation.machines": "Machines"
 }

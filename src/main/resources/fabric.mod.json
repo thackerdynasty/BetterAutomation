@@ -23,6 +23,9 @@
 		],
 		"client": [
 			"com.dhyanthacker.betterautomation.BetterAutomationClient"
+		],
+		"rei_client": [
+			"com.dhyanthacker.betterautomation.compat.BetterAutomationREIClient"
 		]
 	},
 	"mixins": [

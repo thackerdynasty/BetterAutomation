@@ -1,6 +1,7 @@
 package com.dhyanthacker.betterautomation.block;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
+import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
 import com.dhyanthacker.betterautomation.block.custom.SolarPanelBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -17,7 +18,14 @@ public class ModBlocks {
             new SolarPanelBlock(AbstractBlock.Settings.create()));
 
     public static final Block LITHIUM_ORE = registerBlock("lithium_ore",
-            new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create()));
+            new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
+                    .strength(3f, 3f)));
+
+    public static final Block LITHIUM_BLOCK = registerBlock("lithium_block",
+            new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
+
+    public static final Block ELECTRIC_FURNACE = registerBlock("electric_furnace",
+            new ElectricFurnaceBlock(AbstractBlock.Settings.create().requiresTool().strength(4f)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

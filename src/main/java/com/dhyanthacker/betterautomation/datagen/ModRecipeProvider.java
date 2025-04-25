@@ -23,8 +23,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
     public void generate(RecipeExporter recipeExporter) {
         List<ItemConvertible> LITHIUM_SMELTABLES = List.of(ModItems.RAW_LITHIUM, ModBlocks.LITHIUM_ORE);
 
-        offerSmelting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 200, "lithium");
-        offerBlasting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 100, "lithium");
+        // moved to electric furnace
+//        offerSmelting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 200, "lithium");
+//        offerBlasting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 100, "lithium");
+
+        offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.LITHIUM,
+                RecipeCategory.BUILDING_BLOCKS, ModBlocks.LITHIUM_BLOCK);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, ModItems.BATTERY)
                 .pattern(" I ")
