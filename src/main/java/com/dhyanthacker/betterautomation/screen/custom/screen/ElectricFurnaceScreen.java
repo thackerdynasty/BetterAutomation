@@ -38,8 +38,18 @@ public class ElectricFurnaceScreen extends HandledScreen<ElectricFurnaceScreenHa
     }
 
     private void drawBattery(DrawContext context, int x, int y) {
-        context.drawTexture(BATTERY_TEXTURE, x + 59, y + 35, 0, 0,
-                10, handler.getScaledBattery(), 10, 16);
+        int batteryPixelSize = 16;
+        int scaled = handler.getScaledBattery(); // Value from 0 (empty) to 16 (full)
+        int yOffset = batteryPixelSize - scaled; // Invert for bottom-up rendering
+
+        // Draw only the filled portion, starting from the bottom
+        context.drawTexture(
+            BATTERY_TEXTURE,
+            x + 59, y + 35 + yOffset, // Y position moves up as battery fills
+            0, yOffset,               // Texture V offset
+            10, scaled,               // Width, Height to draw
+            10, batteryPixelSize      // Texture total size
+        );
     }
 
     private void renderArrowProgress(DrawContext context, int x, int y) {
