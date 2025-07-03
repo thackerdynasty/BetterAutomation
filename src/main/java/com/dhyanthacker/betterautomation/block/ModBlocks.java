@@ -2,6 +2,7 @@ package com.dhyanthacker.betterautomation.block;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
+import com.dhyanthacker.betterautomation.block.custom.PipeBlock;
 import com.dhyanthacker.betterautomation.block.custom.SolarPanelBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -26,6 +27,12 @@ public class ModBlocks {
 
     public static final Block ELECTRIC_FURNACE = registerBlock("electric_furnace",
             new ElectricFurnaceBlock(AbstractBlock.Settings.create().requiresTool().strength(4f)));
+
+    public static final Block PIPE = registerBlock("pipe", new PipeBlock(AbstractBlock.Settings.create()
+            .strength(0.1f).nonOpaque()));
+
+    public static final Block WIRE = registerBlock("wire",
+            new Block(AbstractBlock.Settings.create().strength(0.1f).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

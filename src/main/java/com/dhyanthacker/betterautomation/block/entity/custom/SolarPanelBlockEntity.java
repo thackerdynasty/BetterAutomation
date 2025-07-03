@@ -1,5 +1,8 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.block.api.PipeDirection;
+import com.dhyanthacker.betterautomation.block.api.PipeType;
+import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
@@ -26,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class SolarPanelBlockEntity extends BlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+public class SolarPanelBlockEntity extends PipeableBlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
 
     public SolarPanelBlockEntity(BlockPos pos, BlockState state) {
@@ -92,5 +95,25 @@ public class SolarPanelBlockEntity extends BlockEntity implements ImplementedInv
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new SolarPanelScreenHandler(syncId, playerInventory, pos);
+    }
+
+    @Override
+    public PipeDirection getInputDirection() {
+        return null;
+    }
+
+    @Override
+    public PipeDirection getOutputDirection() {
+        return PipeDirection.RIGHT;
+    }
+
+    @Override
+    public PipeType getInputType() {
+        return null;
+    }
+
+    @Override
+    public PipeType getOutputType() {
+        return PipeType.ENERGY;
     }
 }

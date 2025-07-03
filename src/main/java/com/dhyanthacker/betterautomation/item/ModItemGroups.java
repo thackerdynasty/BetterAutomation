@@ -39,7 +39,14 @@ public class ModItemGroups {
                                 entries.add(ModBlocks.ELECTRIC_FURNACE);
                             }).build());
 
-
+    public static final ItemGroup MOVEMENT_GROUP =
+            Registry.register(Registries.ITEM_GROUP, Identifier.of(BetterAutomation.MOD_ID, "movement"),
+                    FabricItemGroup.builder().icon(() -> new ItemStack(ModBlocks.PIPE))
+                            .displayName(Text.translatable("itemgroup.betterautomation.movement"))
+                            .entries((displayContext, entries) -> {
+                                entries.add(ModBlocks.PIPE);
+                                entries.add(ModBlocks.WIRE);
+                            }).build());
 
     public static void registerItemGroups() {
         BetterAutomation.LOGGER.info("Registering Mod Item Groups for " + BetterAutomation.MOD_ID);

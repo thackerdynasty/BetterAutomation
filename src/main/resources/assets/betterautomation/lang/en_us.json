@@ -3,10 +3,12 @@
   "item.betterautomation.battery.tooltip": "Battery Left: %1$s",
   "block.betterautomation.solar_panel": "Solar Panel",
   "block.betterautomation.lithium_ore": "Lithium Ore",
+  "block.betterautomation.pipe": "Pipe",
   "item.betterautomation.raw_lithium": "Raw Lithium",
   "item.betterautomation.lithium": "Lithium",
   "itemgroup.betterautomation.ores": "BetterAutomation Ores",
   "itemgroup.betterautomation.power": "BetterAutomation Power",
   "block.betterautomation.electric_furnace": "Electric Furnace",
-  "itemgroup.betterautomation.machines": "Machines"
+  "itemgroup.betterautomation.machines": "Machines",
+  "itemgroup.betterautomation.movement": "Movement"
 }

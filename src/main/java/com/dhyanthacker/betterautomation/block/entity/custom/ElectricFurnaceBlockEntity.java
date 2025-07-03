@@ -1,5 +1,8 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.block.api.PipeDirection;
+import com.dhyanthacker.betterautomation.block.api.PipeType;
+import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
@@ -37,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class ElectricFurnaceBlockEntity extends BlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory<BlockPos> {
+public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements ImplementedInventory, ExtendedScreenHandlerFactory<BlockPos> {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
 
     public static final int INPUT_SLOT = 0;
@@ -91,8 +94,9 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements Implement
             int powerToUse = UniformIntProvider.create(2, 8).get(random);
             getStack(BATTERY_SLOT).set(ModDataComponentTypes.BATTERY_POWER,
                     getStack(BATTERY_SLOT).get(ModDataComponentTypes.BATTERY_POWER) - powerToUse);
+            if (getStack(BATTERY_SLOT).get(ModDataComponentTypes.BATTERY_POWER) <= 0)
+                getStack(BATTERY_SLOT).set(ModDataComponentTypes.BATTERY_POWER, 0);
             markDirty(world, pos, state);
-
             if (progress >= maxProgress) {
                 smeltItem();
                 resetProgress();
@@ -103,7 +107,8 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements Implement
     private boolean hasBattery() {
         ItemStack batteryStack = getStack(BATTERY_SLOT);
         if (batteryStack != null) {
-            return batteryStack.get(ModDataComponentTypes.BATTERY_POWER) != null;
+            return batteryStack.get(ModDataComponentTypes.BATTERY_POWER) != null &&
+                    batteryStack.get(ModDataComponentTypes.BATTERY_POWER) > 0;
         }
         return false;
     }
@@ -193,5 +198,25 @@ public class ElectricFurnaceBlockEntity extends BlockEntity implements Implement
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
         return createNbt(registryLookup);
+    }
+
+    @Override
+    public PipeDirection getInputDirection() {
+        return null;
+    }
+
+    @Override
+    public PipeDirection getOutputDirection() {
+        return null;
+    }
+
+    @Override
+    public PipeType getInputType() {
+        return PipeType.ENERGY;
+    }
+
+    @Override
+    public PipeType getOutputType() {
+        return PipeType.ITEM;
     }
 }
