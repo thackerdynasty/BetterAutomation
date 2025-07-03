@@ -101,6 +101,22 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 smeltItem();
                 resetProgress();
             }
+        } else if (hasRecipe() && hasInputPipe()) {
+            maxProgress = getCookTime(world);
+            progress++;
+            Random random = Random.create();
+            int powerToUse = UniformIntProvider.create(2, 8).get(random);
+            int extractedPower = extractEnergy(powerToUse);
+            if (extractedPower < powerToUse) {
+                // Not enough energy to continue processing
+                resetProgress();
+            } else {
+                markDirty(world, pos, state);
+                if (progress >= maxProgress) {
+                    smeltItem();
+                    resetProgress();
+                }
+            }
         } else resetProgress();
     }
 
@@ -202,7 +218,7 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
 
     @Override
     public PipeDirection getInputDirection() {
-        return null;
+        return PipeDirection.LEFT;
     }
 
     @Override
