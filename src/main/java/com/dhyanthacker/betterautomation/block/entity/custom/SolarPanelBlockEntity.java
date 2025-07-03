@@ -57,6 +57,8 @@ public class SolarPanelBlockEntity extends PipeableBlockEntity implements Implem
                 }
                 battery.set(ModDataComponentTypes.BATTERY_POWER, newPower);
             }
+        } else if (hasOutputPipe()) {
+            insertEnergy(17);
         }
     }
 

@@ -18,8 +18,8 @@ public enum PipeDirection {
         return switch (this) {
             case FRONT -> facing;
             case BACK -> facing.getOpposite();
-            case LEFT -> facing.rotateYClockwise();
-            case RIGHT -> facing.rotateYCounterclockwise();
+            case LEFT -> facing.rotateYCounterclockwise();
+            case RIGHT -> facing.rotateYClockwise();
             case UP -> Direction.UP;
             case DOWN -> Direction.DOWN;
         };

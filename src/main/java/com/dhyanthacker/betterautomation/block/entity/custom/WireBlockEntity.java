@@ -10,6 +10,8 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class WireBlockEntity extends BlockEntity {
@@ -18,6 +20,15 @@ public class WireBlockEntity extends BlockEntity {
 
     public WireBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.WIRE_BE, pos, state);
+    }
+
+    public void tick(World world, BlockPos pos, BlockState state) {
+        // implement logic for power transfer including determining direction and amount of power to transfer
+        // for now, only transfer in positive X direction as an example
+        if (world.getBlockEntity(pos.offset(Direction.Axis.X, 1)) instanceof WireBlockEntity neighbor) {
+            int excessPower = neighbor.insertPower(currentPower);
+            currentPower -= (currentPower - excessPower); // Reduce current power by the amount transferred
+        }
     }
 
     public int getCurrentPower() {

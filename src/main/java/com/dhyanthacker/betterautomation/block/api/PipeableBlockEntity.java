@@ -1,5 +1,6 @@
 package com.dhyanthacker.betterautomation.block.api;
 
+import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.custom.PipeBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.custom.WireBlockEntity;
@@ -34,12 +35,14 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     public boolean hasOutputPipe() {
         PipeDirection dir = getOutputDirection();
         BlockPos pos = this.getPos().offset(dir.toDirection(getWorld().getBlockState(getPos())));
+//        BetterAutomation.LOGGER.info("Checking for output pipe at: " + pos);
         BlockEntity entity = this.getWorld().getBlockEntity(pos);
         if (getOutputType() == PipeType.ITEM) {
             return entity instanceof PipeBlockEntity;
         } else if (getOutputType() == PipeType.ENERGY) {
             return entity instanceof WireBlockEntity;
         } else {
+            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + getOutputType());
             return false; // For now, only ITEM and ENERGY pipes are supported
         }
     }
@@ -48,11 +51,13 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         if (hasOutputPipe() && getOutputType() == PipeType.ITEM) {
             PipeBlockEntity outputPipe = (PipeBlockEntity) this.getWorld().getBlockEntity(
                 this.getPos().offset(getOutputDirection().toDirection(getWorld().getBlockState(getPos()))));
-            if (outputPipe == null) return false;
+            if (outputPipe == null ||
+                    outputPipe.getStack(0).getCount() >= outputPipe.getStack(0).getMaxCount()) return false;
             outputPipe.setStack(0, stack);
             outputPipe.markDirty();
             return true;
         }
+        BetterAutomation.LOGGER.warn("Tried to copy to pipe, but no output pipe found or wrong type!");
         return false;
     }
     public ItemStack extractFromPipe() {

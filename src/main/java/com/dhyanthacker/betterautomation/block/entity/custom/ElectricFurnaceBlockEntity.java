@@ -118,6 +118,21 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 }
             }
         } else resetProgress();
+        if (hasOutputPipe()) {
+            if (!getStack(OUTPUT_SLOT).isEmpty()) {
+                ItemStack outputStack = getStack(OUTPUT_SLOT);
+                ItemStack stackToTransfer = new ItemStack(outputStack.getItem(), 1);
+                if (outputStack.getCount() > 1) {
+                    outputStack.setCount(outputStack.getCount() - 1);
+                } else {
+                    setStack(OUTPUT_SLOT, ItemStack.EMPTY);
+                }
+                if (!copyToPipe(stackToTransfer)) {
+                    outputStack.setCount(outputStack.getCount() + 1);
+                    setStack(OUTPUT_SLOT, outputStack); // If transfer fails, revert the output slot
+                }
+            }
+        }
     }
 
     private boolean hasBattery() {
@@ -223,7 +238,7 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
 
     @Override
     public PipeDirection getOutputDirection() {
-        return null;
+        return PipeDirection.RIGHT;
     }
 
     @Override
