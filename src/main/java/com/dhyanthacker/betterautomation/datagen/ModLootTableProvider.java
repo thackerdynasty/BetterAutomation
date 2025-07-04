@@ -19,5 +19,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.ELECTRIC_FURNACE);
         addDrop(ModBlocks.LITHIUM_BLOCK);
         addDrop(ModBlocks.LITHIUM_ORE, oreDrops(ModBlocks.LITHIUM_ORE, ModItems.RAW_LITHIUM));
+        addDrop(ModBlocks.WIRE);
+        addDrop(ModBlocks.PIPE);
     }
 }
