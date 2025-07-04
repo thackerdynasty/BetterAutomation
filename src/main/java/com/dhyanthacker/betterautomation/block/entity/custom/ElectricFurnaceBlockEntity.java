@@ -3,6 +3,7 @@ package com.dhyanthacker.betterautomation.block.entity.custom;
 import com.dhyanthacker.betterautomation.block.api.PipeDirection;
 import com.dhyanthacker.betterautomation.block.api.PipeType;
 import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
+import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
@@ -85,6 +86,11 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
 	}
 
     public void tick(World world, BlockPos pos, BlockState state) {
+        if (hasPower()) {
+            getWorld().setBlockState(getPos(), getWorld().getBlockState(getPos()).with(ElectricFurnaceBlock.LIT, true));
+        } else {
+            getWorld().setBlockState(getPos(), getWorld().getBlockState(getPos()).with(ElectricFurnaceBlock.LIT, false));
+        }
         if (hasRecipe() && hasBattery()) {
             maxProgress = getCookTime(world);
             progress++;
@@ -101,7 +107,7 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 smeltItem();
                 resetProgress();
             }
-        } else if (hasRecipe() && hasInputPipe()) {
+        } else if (hasInputPipe() && hasRecipe()) {
             maxProgress = getCookTime(world);
             progress++;
             Random random = Random.create();
@@ -185,6 +191,10 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
         maxProgress = 300;
     }
 
+    private boolean hasPower() {
+        return hasBattery() || hasInputPipe() && getInputType() == PipeType.ENERGY;
+    }
+
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
@@ -231,14 +241,15 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
         return createNbt(registryLookup);
     }
 
+    // flip directions because block faces player
     @Override
     public PipeDirection getInputDirection() {
-        return PipeDirection.LEFT;
+        return PipeDirection.RIGHT;
     }
 
     @Override
     public PipeDirection getOutputDirection() {
-        return PipeDirection.RIGHT;
+        return PipeDirection.LEFT;
     }
 
     @Override
@@ -249,5 +260,19 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
     @Override
     public PipeType getOutputType() {
         return PipeType.ITEM;
+    }
+
+    @Override
+    public boolean hasInputPipe() {
+        PipeDirection dir = getInputDirection();
+        BlockPos pos = this.getPos().offset(dir.toDirection(getWorld().getBlockState(getPos())));
+        BlockEntity entity = this.getWorld().getBlockEntity(pos);
+        if (getInputType() == PipeType.ITEM) {
+            return entity instanceof PipeBlockEntity;
+        } else if (getInputType() == PipeType.ENERGY) {
+            return entity instanceof WireBlockEntity;
+        } else {
+            return false; // For now, only ITEM and ENERGY pipes are supported
+        }
     }
 }

@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "north": "betterautomation:block/electric_furnace_front",
+    "south": "betterautomation:block/electric_furnace_base",
+    "east":  "betterautomation:block/electric_furnace_left",
+    "west":  "betterautomation:block/electric_furnace_right",
+    "up":    "betterautomation:block/electric_furnace_base",
+    "down":  "betterautomation:block/electric_furnace_base"
+  }
+}

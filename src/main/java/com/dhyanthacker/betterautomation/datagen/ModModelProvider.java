@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.client.Models;
+import net.minecraft.data.client.TexturedModel;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -17,7 +18,8 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SOLAR_PANEL);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_ORE);
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ELECTRIC_FURNACE);
+        // multiple faces for electric furnace, will manually register with json
+//        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ELECTRIC_FURNACE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_BLOCK);
 
         blockStateModelGenerator.registerNorthDefaultHorizontalRotation(ModBlocks.PIPE);
