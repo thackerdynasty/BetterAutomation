@@ -26,7 +26,7 @@ public class ElectricFurnaceScreenHandler extends ScreenHandler {
     public final ElectricFurnaceBlockEntity blockEntity;
 
     public ElectricFurnaceScreenHandler(int syncId, PlayerInventory inventory, BlockPos pos) {
-        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(pos), new ArrayPropertyDelegate(2));
+        this(syncId, inventory, inventory.player.getWorld().getBlockEntity(pos), new ArrayPropertyDelegate(4));
     }
 
     public ElectricFurnaceScreenHandler(int syncId, PlayerInventory playerInventory,
@@ -51,13 +51,19 @@ public class ElectricFurnaceScreenHandler extends ScreenHandler {
     }
 
     public int getScaledBattery() {
-        int maxBattery = 20000;
-        ItemStack battery = inventory.getStack(ElectricFurnaceBlockEntity.BATTERY_SLOT);
-        if (battery.isEmpty() || battery.get(ModDataComponentTypes.BATTERY_POWER) == null) return 0;
-        int currentBattery = battery.get(ModDataComponentTypes.BATTERY_POWER);
-        int batteryPixelSize = 16;
+        if (propertyDelegate.get(3) == 1 && propertyDelegate.get(2) == 0) {
+            int maxBattery = 20000;
+            ItemStack battery = inventory.getStack(ElectricFurnaceBlockEntity.BATTERY_SLOT);
+            if (battery.isEmpty() || battery.get(ModDataComponentTypes.BATTERY_POWER) == null) return 0;
+            int currentBattery = battery.get(ModDataComponentTypes.BATTERY_POWER);
+            int batteryPixelSize = 16;
 
-        return currentBattery * batteryPixelSize / maxBattery;
+            return currentBattery * batteryPixelSize / maxBattery;
+        } else if (propertyDelegate.get(3) == 1 && propertyDelegate.get(2) == 1) {
+            return 16;
+        } else {
+            return 0;
+        }
     }
 
     public int getScaledArrowProgress() {

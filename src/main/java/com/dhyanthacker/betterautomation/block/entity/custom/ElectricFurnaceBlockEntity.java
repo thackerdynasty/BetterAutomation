@@ -51,6 +51,8 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
     protected final PropertyDelegate propertyDelegate;
     private int progress = 0;
     private int maxProgress = 300;
+    private boolean isWired = false;
+    private boolean isPowered = false;
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.ELECTRIC_FURNACE_BE, pos, state);
@@ -60,6 +62,8 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 return switch (index) {
                     case 0 -> ElectricFurnaceBlockEntity.this.progress;
                     case 1 -> ElectricFurnaceBlockEntity.this.maxProgress;
+                    case 2 -> ElectricFurnaceBlockEntity.this.isWired ? 1 : 0;
+                    case 3 -> ElectricFurnaceBlockEntity.this.isPowered ? 1 : 0;
                     default -> 0;
                 };
             }
@@ -69,12 +73,14 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 switch (index) {
                     case 0: ElectricFurnaceBlockEntity.this.progress = value;
                     case 1: ElectricFurnaceBlockEntity.this.maxProgress = value;
+                    case 2: ElectricFurnaceBlockEntity.this.isWired = value == 1;
+                    case 3: ElectricFurnaceBlockEntity.this.isPowered = value == 1;
                 }
             }
 
             @Override
             public int size() {
-                return 2;
+                return 4;
             }
         };
     }
@@ -192,6 +198,16 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
     }
 
     private boolean hasPower() {
+        if (hasBattery()) {
+            isPowered = true;
+            isWired = false;
+        } else if (hasInputPipe() && getInputType() == PipeType.ENERGY) {
+            isPowered = true;
+            isWired = true;
+        } else {
+            isPowered = false;
+            isWired = false;
+        }
         return hasBattery() || hasInputPipe() && getInputType() == PipeType.ENERGY;
     }
 
