@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 
 public abstract class PipeableBlockEntity extends BlockEntity {
     public PipeableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {

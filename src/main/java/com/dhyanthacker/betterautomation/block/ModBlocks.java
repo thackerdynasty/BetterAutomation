@@ -4,6 +4,7 @@ import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
 import com.dhyanthacker.betterautomation.block.custom.PipeBlock;
 import com.dhyanthacker.betterautomation.block.custom.SolarPanelBlock;
+import com.dhyanthacker.betterautomation.block.custom.WireBlock;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ExperienceDroppingBlock;
@@ -32,7 +33,7 @@ public class ModBlocks {
             .strength(0.1f).nonOpaque()));
 
     public static final Block WIRE = registerBlock("wire",
-            new Block(AbstractBlock.Settings.create().strength(0.1f).nonOpaque()));
+            new WireBlock(AbstractBlock.Settings.create().strength(0.1f).nonOpaque()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

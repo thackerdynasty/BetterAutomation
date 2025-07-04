@@ -1,5 +1,6 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.api.PipeDirection;
 import com.dhyanthacker.betterautomation.block.api.PipeType;
 import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;

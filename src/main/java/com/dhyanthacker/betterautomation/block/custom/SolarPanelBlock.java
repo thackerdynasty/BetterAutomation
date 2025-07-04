@@ -13,6 +13,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -62,5 +63,18 @@ public class SolarPanelBlock extends BlockWithEntity implements BlockEntityProvi
         super.appendProperties(builder);
 
         builder.add(FACING);
+    }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
+
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof SolarPanelBlockEntity) {
+                ItemScatterer.spawn(world, pos, (SolarPanelBlockEntity) blockEntity);
+                world.updateComparators(pos, this);
+            }
+        }
     }
 }
