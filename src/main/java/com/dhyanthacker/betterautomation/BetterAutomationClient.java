@@ -3,6 +3,7 @@ package com.dhyanthacker.betterautomation;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.block.entity.renderer.PipeBlockEntityRenderer;
 import com.dhyanthacker.betterautomation.screen.ModScreenHandlers;
+import com.dhyanthacker.betterautomation.screen.custom.screen.CoalGeneratorScreen;
 import com.dhyanthacker.betterautomation.screen.custom.screen.ElectricFurnaceScreen;
 import com.dhyanthacker.betterautomation.screen.custom.screen.SolarPanelScreen;
 import net.fabricmc.api.ClientModInitializer;
@@ -14,6 +15,7 @@ public class BetterAutomationClient implements ClientModInitializer {
     public void onInitializeClient() {
         HandledScreens.register(ModScreenHandlers.SOLAR_PANEL_SCREEN_HANDLER, SolarPanelScreen::new);
         HandledScreens.register(ModScreenHandlers.ELECTRIC_FURNACE_SCREEN_HANDLER, ElectricFurnaceScreen::new);
+        HandledScreens.register(ModScreenHandlers.COAL_GENERATOR_SCREEN_HANDLER, CoalGeneratorScreen::new);
 
         BlockEntityRendererFactories.register(ModBlockEntities.PIPE_BE, PipeBlockEntityRenderer::new);
     }

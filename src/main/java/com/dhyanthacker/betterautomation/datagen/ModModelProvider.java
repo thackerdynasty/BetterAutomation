@@ -18,8 +18,6 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SOLAR_PANEL);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_ORE);
-        // multiple faces for electric furnace, will manually register with json
-//        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ELECTRIC_FURNACE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_BLOCK);
 
         blockStateModelGenerator.registerNorthDefaultHorizontalRotation(ModBlocks.PIPE);

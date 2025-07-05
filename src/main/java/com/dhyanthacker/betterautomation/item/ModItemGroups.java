@@ -18,6 +18,7 @@ public class ModItemGroups {
                             .entries((displayContext, entries) -> {
                                 entries.add(ModBlocks.SOLAR_PANEL);
                                 entries.add(ModItems.BATTERY);
+                                entries.add(ModBlocks.COAL_GENERATOR);
                             }).build());
 
     public static final ItemGroup ORES_GROUP =

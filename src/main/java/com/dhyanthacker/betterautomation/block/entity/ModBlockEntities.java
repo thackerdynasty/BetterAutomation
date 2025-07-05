@@ -2,10 +2,7 @@ package com.dhyanthacker.betterautomation.block.entity;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.ModBlocks;
-import com.dhyanthacker.betterautomation.block.entity.custom.ElectricFurnaceBlockEntity;
-import com.dhyanthacker.betterautomation.block.entity.custom.PipeBlockEntity;
-import com.dhyanthacker.betterautomation.block.entity.custom.SolarPanelBlockEntity;
-import com.dhyanthacker.betterautomation.block.entity.custom.WireBlockEntity;
+import com.dhyanthacker.betterautomation.block.entity.custom.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -27,6 +24,10 @@ public class ModBlockEntities {
     public static final BlockEntityType<WireBlockEntity> WIRE_BE =
             Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(BetterAutomation.MOD_ID, "wire_be"),
                     BlockEntityType.Builder.create(WireBlockEntity::new, ModBlocks.WIRE).build());
+
+    public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR_BE =
+            Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(BetterAutomation.MOD_ID, "coal_generator_be"),
+                    BlockEntityType.Builder.create(CoalGeneratorBlockEntity::new, ModBlocks.COAL_GENERATOR).build());
 
     public static void registerBlockEntities() {
         BetterAutomation.LOGGER.info("Registering Block Entities for" + BetterAutomation.MOD_ID);

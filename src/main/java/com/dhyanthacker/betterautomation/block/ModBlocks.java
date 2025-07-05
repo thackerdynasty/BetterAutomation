@@ -1,10 +1,7 @@
 package com.dhyanthacker.betterautomation.block;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
-import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
-import com.dhyanthacker.betterautomation.block.custom.PipeBlock;
-import com.dhyanthacker.betterautomation.block.custom.SolarPanelBlock;
-import com.dhyanthacker.betterautomation.block.custom.WireBlock;
+import com.dhyanthacker.betterautomation.block.custom.*;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ExperienceDroppingBlock;
@@ -34,6 +31,9 @@ public class ModBlocks {
 
     public static final Block WIRE = registerBlock("wire",
             new WireBlock(AbstractBlock.Settings.create().strength(0.1f).nonOpaque()));
+
+    public static final Block COAL_GENERATOR = registerBlock("coal_generator",
+            new CoalGeneratorBlock(AbstractBlock.Settings.create().strength(3f).requiresTool()));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "betterautomation:block/coal_generator" },
+    "facing=south": { "model": "betterautomation:block/coal_generator", "y": 180 },
+    "facing=west":  { "model": "betterautomation:block/coal_generator", "y": 270 },
+    "facing=east":  { "model": "betterautomation:block/coal_generator", "y": 90 }
+  }
+}

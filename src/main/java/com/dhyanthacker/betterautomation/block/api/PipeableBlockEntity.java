@@ -97,4 +97,19 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         }
         return amount; // If no output pipe, return the full amount as excess
     }
+
+    public boolean inputWireHasPower() {
+        return inputWireHasPower(1);
+    }
+    public boolean inputWireHasPower(int requiredPower) {
+        if (getInputType() != PipeType.ENERGY) return false;
+        if (hasInputPipe()) {
+            WireBlockEntity inputWire = (WireBlockEntity) this.getWorld().getBlockEntity(
+                this.getPos().offset(getInputDirection().toDirection(getWorld().getBlockState(getPos()))));
+            if (inputWire != null) {
+                return inputWire.getCurrentPower() > 0;
+            }
+        }
+        return false;
+    }
 }

@@ -201,14 +201,14 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
         if (hasBattery()) {
             isPowered = true;
             isWired = false;
-        } else if (hasInputPipe() && getInputType() == PipeType.ENERGY) {
+        } else if (hasInputPipe() && getInputType() == PipeType.ENERGY && inputWireHasPower(8)) {
             isPowered = true;
             isWired = true;
         } else {
             isPowered = false;
             isWired = false;
         }
-        return hasBattery() || hasInputPipe() && getInputType() == PipeType.ENERGY;
+        return hasBattery() || hasInputPipe() && getInputType() == PipeType.ENERGY && inputWireHasPower(8);
     }
 
     @Override

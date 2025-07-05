@@ -11,5 +11,6 @@
   "block.betterautomation.electric_furnace": "Electric Furnace",
   "itemgroup.betterautomation.machines": "Machines",
   "itemgroup.betterautomation.movement": "Movement",
-  "block.betterautomation.wire": "Wire"
+  "block.betterautomation.wire": "Wire",
+  "block.betterautomation.coal_generator": "Coal Generator"
 }
