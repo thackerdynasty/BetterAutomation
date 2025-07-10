@@ -1,5 +1,6 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.api.PipeDirection;
 import com.dhyanthacker.betterautomation.block.api.PipeType;
 import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
@@ -10,8 +11,15 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -110,14 +118,14 @@ public class CoalGeneratorBlockEntity extends PipeableBlockEntity implements Imp
     private void getFuelFromPipe() {
         if (hasInputPipe() && getStack(0).getCount() < 64) {
             ItemStack stack = extractFromPipe();
-            if (!stack.isEmpty() && stack.isOf(Items.COAL)) {
-                ItemStack currentFuel = getStack(0);
-                if (currentFuel.isEmpty()) {
-                    setStack(0, stack);
-                } else {
-                    currentFuel.increment(stack.getCount());
-                    setStack(0, currentFuel);
-                }
+            ItemStack currentFuel = getStack(0);
+            if (currentFuel.getCount() == 0) {
+                setStack(0, stack);
+                markDirty();
+            } else {
+                ItemStack newFuel = new ItemStack(Items.COAL, currentFuel.getCount() + stack.getCount());
+                setStack(0, newFuel);
+                markDirty();
             }
         }
     }
@@ -160,5 +168,48 @@ public class CoalGeneratorBlockEntity extends PipeableBlockEntity implements Imp
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
         return new CoalGeneratorScreenHandler(syncId, playerInventory, this, propertyDelegate);
+    }
+
+    @Override
+    public ItemStack extractFromPipe() {
+        if (hasInputPipe() && getInputType() == PipeType.ITEM) {
+            PipeBlockEntity inputPipe = (PipeBlockEntity) this.getWorld().getBlockEntity(
+                this.getPos().offset(getInputDirection().toDirection(getWorld().getBlockState(getPos()))));
+            if (inputPipe == null || inputPipe.isEmpty()) return ItemStack.EMPTY;
+            ItemStack stack = inputPipe.getStack(0);
+            if (stack.isEmpty() || !stack.isOf(Items.COAL)) return ItemStack.EMPTY;
+            inputPipe.removeStack(0, 1);
+            inputPipe.markDirty();
+            return stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        nbt.putInt("FuelTime", fuelTime);
+        nbt.putInt("EnergyStored", energyStored);
+
+        Inventories.writeNbt(nbt, inventory, registryLookup);
+    }
+
+    @Override
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
+        fuelTime = nbt.getInt("FuelTime");
+        energyStored = nbt.getInt("EnergyStored");
+
+        Inventories.readNbt(nbt, inventory, registryLookup);
+    }
+
+    @Override
+    public @Nullable Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 }

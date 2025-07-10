@@ -3,6 +3,7 @@ package com.dhyanthacker.betterautomation.block.custom;
 import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.block.entity.custom.CoalGeneratorBlockEntity;
+import com.dhyanthacker.betterautomation.block.entity.custom.ElectricFurnaceBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -17,6 +18,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -68,5 +70,18 @@ public class CoalGeneratorBlock extends BlockWithEntity {
         }
 
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
+
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof ElectricFurnaceBlockEntity) {
+                ItemScatterer.spawn(world, pos, (ElectricFurnaceBlockEntity) blockEntity);
+                world.updateComparators(pos, this);
+            }
+        }
     }
 }

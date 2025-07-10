@@ -19,11 +19,13 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.LITHIUM_ORE)
                 .add(ModBlocks.LITHIUM_BLOCK)
                 .add(ModBlocks.ELECTRIC_FURNACE)
-                .add(ModBlocks.SOLAR_PANEL);
+                .add(ModBlocks.SOLAR_PANEL)
+                .add(ModBlocks.COAL_GENERATOR);
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.LITHIUM_ORE)
                 .add(ModBlocks.ELECTRIC_FURNACE)
-                .add(ModBlocks.SOLAR_PANEL);
+                .add(ModBlocks.SOLAR_PANEL)
+                .add(ModBlocks.COAL_GENERATOR);
     }
 }

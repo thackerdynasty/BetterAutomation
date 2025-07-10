@@ -1,6 +1,7 @@
 package com.dhyanthacker.betterautomation.block.custom;
 
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
+import com.dhyanthacker.betterautomation.block.entity.custom.ElectricFurnaceBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.custom.PipeBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -65,5 +67,18 @@ public class PipeBlock extends BlockWithEntity {
             case NORTH, SOUTH -> Block.createCuboidShape(0, 5, 5, 16, 11, 11);
             default -> Block.createCuboidShape(5, 5, 0, 11, 11, 16);
         };
+    }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
+
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof ElectricFurnaceBlockEntity) {
+                ItemScatterer.spawn(world, pos, (ElectricFurnaceBlockEntity) blockEntity);
+                world.updateComparators(pos, this);
+            }
+        }
     }
 }
