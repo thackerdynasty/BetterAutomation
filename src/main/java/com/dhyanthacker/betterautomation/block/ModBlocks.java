@@ -20,6 +20,10 @@ public class ModBlocks {
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
                     .strength(3f, 3f)));
 
+    public static final Block LITHIUM_ORE_DEEPSLATE = registerBlock("deepslate_lithium_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
+                    .strength(4.5f, 3f)));
+
     public static final Block LITHIUM_BLOCK = registerBlock("lithium_block",
             new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
 

@@ -30,6 +30,7 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         } else if (getInputType() == PipeType.ENERGY) {
             return entity instanceof WireBlockEntity;
         } else {
+            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + getOutputType());
             return false; // For now, only ITEM and ENERGY pipes are supported
         }
     }

@@ -123,8 +123,11 @@ public class CoalGeneratorBlockEntity extends PipeableBlockEntity implements Imp
                 setStack(0, stack);
                 markDirty();
             } else {
-                ItemStack newFuel = new ItemStack(Items.COAL, currentFuel.getCount() + stack.getCount());
-                setStack(0, newFuel);
+                int totalCount = currentFuel.getCount() + stack.getCount();
+                int maxStackSize = Math.min(currentFuel.getMaxCount(), 64);
+                int insertable = Math.min(maxStackSize, totalCount);
+                currentFuel.setCount(insertable);
+                setStack(0, currentFuel);
                 markDirty();
             }
         }

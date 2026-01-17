@@ -43,8 +43,10 @@ public class SolarPanelBlockEntity extends PipeableBlockEntity implements Implem
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
+        if (world.isClient()) return;
+
         // only work in day
-        if (world.isNight())
+        if (!world.isDay())
             return;
 
         if (inventory.get(0).isOf(ModItems.BATTERY)) {

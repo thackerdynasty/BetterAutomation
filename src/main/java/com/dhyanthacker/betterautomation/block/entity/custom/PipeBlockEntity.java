@@ -1,5 +1,7 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.block.api.PipeDirection;
+import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import net.minecraft.block.Block;
@@ -20,7 +22,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PipeBlockEntity extends BlockEntity implements ImplementedInventory {
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -48,10 +54,10 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
         BlockPos negXPos = new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ());
         BlockPos posXPos = new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ());
 
-        if (world.getBlockEntity(negXPos) instanceof ChestBlockEntity) {
-            ChestBlockEntity chest = (ChestBlockEntity) world.getBlockEntity(negXPos);
-            extractFromChest(chest);
-        }
+//        if (world.getBlockEntity(negXPos) instanceof ChestBlockEntity) {
+//            ChestBlockEntity chest = (ChestBlockEntity) world.getBlockEntity(negXPos);
+//            extractFromChest(chest);
+//        }
 //        else if (world.getBlockEntity(posXPos) instanceof ChestBlockEntity
 //            && world.getBlockEntity(negXPos) != null
 //            && ((PipeBlockEntity) world.getBlockEntity(negXPos)).isEmpty()) { // check for null
@@ -60,6 +66,35 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
 //        }
 
         insertItem(posXPos, negXPos);
+    }
+
+    private List<PipeBlockEntity> searchForSurroundingPipes() {
+        BlockPos currentPos = this.getPos();
+        World world = this.getWorld();
+        List<PipeBlockEntity> neighboringPipes = new ArrayList<>();
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = currentPos.offset(direction);
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+            if (neighborEntity instanceof PipeBlockEntity neighborPipe) {
+                // Found a neighboring PipeBlockEntity
+                neighboringPipes.add(neighborPipe);
+            }
+        }
+        return neighboringPipes;
+    }
+
+    private PipeableBlockEntity isConnectedToPipeable() {
+        BlockPos currentPos = this.getPos();
+        World world = this.getWorld();
+        for (Direction direction : Direction.values()) {
+            BlockPos neighborPos = currentPos.offset(direction);
+            BlockEntity neighborEntity = world.getBlockEntity(neighborPos);
+            if (neighborEntity instanceof PipeableBlockEntity pipeable) {
+                // Found a neighboring PipeableBlockEntity
+                return pipeable;
+            }
+        }
+        return null;
     }
 
     private void insertItem(BlockPos posXPos, BlockPos negXPos) {
@@ -71,11 +106,135 @@ public class PipeBlockEntity extends BlockEntity implements ImplementedInventory
             PipeBlockEntity pipe = (PipeBlockEntity) world.getBlockEntity(posXPos);
             if (getStack(0) != ItemStack.EMPTY) insertIntoPipe(pipe);
         }
-//        else if (world.getBlockEntity(negXPos) instanceof PipeBlockEntity
-//            && ((PipeBlockEntity) world.getBlockEntity(negXPos)).isEmpty()) {
-//            PipeBlockEntity pipe = (PipeBlockEntity) world.getBlockEntity(negXPos);
-//            if (getStack(0) != ItemStack.EMPTY) insertIntoPipe(pipe);
+//      debug and implement later
+//        if (world == null) return;
+//        if (isEmpty()) return;
+//
+//        Direction input = findInputDirection();
+//        if (input == null) return;
+//
+//        Direction output = findOutputDirection(input);
+//        if (output == null) return;
+//
+//        BlockPos outPos = getPos().offset(output);
+//        BlockEntity be = getWorld().getBlockEntity(outPos);
+//
+//        if (be instanceof PipeBlockEntity pipe) {
+//            insertIntoPipe(pipe);
+//        } else if (be instanceof ChestBlockEntity chest) {
+//            insertIntoChest(chest);
 //        }
+    }
+
+    private record PipeNode(PipeBlockEntity pipe, Direction from) {}
+
+    @Nullable
+    private Direction findInputDirection() {
+        World world = getWorld();
+        BlockPos start = getPos();
+        if (world == null) return null;
+
+        Set<BlockPos> visited = new HashSet<>();
+        ArrayDeque<PipeNode> queue = new ArrayDeque<>();
+
+        visited.add(start);
+
+        for (Direction dir : Direction.values()) {
+            BlockPos neighborPos = start.offset(dir);
+            BlockEntity be = world.getBlockEntity(neighborPos);
+
+            if (be instanceof PipeableBlockEntity) {
+                return dir;
+            }
+
+            if (be instanceof PipeBlockEntity pipe) {
+                visited.add(neighborPos);
+                queue.add(new PipeNode(pipe, dir));
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            PipeNode node = queue.poll();
+            BlockPos pos = node.pipe().getPos();
+
+            for (Direction dir : Direction.values()) {
+                BlockPos nextPos = pos.offset(dir);
+                if (!visited.add(nextPos)) continue;
+
+                BlockEntity be = world.getBlockEntity(nextPos);
+                if (be instanceof ChestBlockEntity) {
+                    return node.from();
+                }
+
+                if (be instanceof PipeBlockEntity nextPipe) {
+                    queue.add(new PipeNode(nextPipe, node.from()));
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private Direction findOutputDirection(Direction input) {
+        World world = getWorld();
+        BlockPos start = getPos();
+        if (world == null) return null;
+
+        // First, try immediate neighbors (pipes or chests), excluding input side
+        for (Direction dir : Direction.values()) {
+            if (dir == input) continue;
+
+            BlockPos neighborPos = start.offset(dir);
+            BlockEntity be = world.getBlockEntity(neighborPos);
+
+            if (be instanceof PipeBlockEntity) {
+                return dir;
+            }
+
+            if (be instanceof ChestBlockEntity) {
+                return dir;
+            }
+        }
+
+        // If no immediate neighbor found, BFS to find a path to a chest through pipes
+        Set<BlockPos> visited = new HashSet<>();
+        ArrayDeque<PipeNode> queue = new ArrayDeque<>();
+
+        visited.add(start);
+
+        for (Direction dir : Direction.values()) {
+            if (dir == input) continue;
+
+            BlockPos neighborPos = start.offset(dir);
+            BlockEntity be = world.getBlockEntity(neighborPos);
+
+            if (be instanceof PipeBlockEntity pipe) {
+                visited.add(neighborPos);
+                queue.add(new PipeNode(pipe, dir));
+            }
+        }
+
+        while (!queue.isEmpty()) {
+            PipeNode node = queue.poll();
+            BlockPos pos = node.pipe().getPos();
+
+            for (Direction dir : Direction.values()) {
+                BlockPos nextPos = pos.offset(dir);
+                if (!visited.add(nextPos)) continue;
+
+                BlockEntity be = world.getBlockEntity(nextPos);
+                if (be instanceof ChestBlockEntity) {
+                    return node.from();
+                }
+
+                if (be instanceof PipeBlockEntity nextPipe) {
+                    queue.add(new PipeNode(nextPipe, node.from()));
+                }
+            }
+        }
+
+        return null;
     }
 
     private void extractFromChest(ChestBlockEntity chest) {

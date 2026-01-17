@@ -17,6 +17,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(ModBlocks.LITHIUM_ORE)
+                .add(ModBlocks.LITHIUM_ORE_DEEPSLATE)
                 .add(ModBlocks.LITHIUM_BLOCK)
                 .add(ModBlocks.ELECTRIC_FURNACE)
                 .add(ModBlocks.SOLAR_PANEL)
@@ -24,6 +25,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.LITHIUM_ORE)
+                .add(ModBlocks.LITHIUM_ORE_DEEPSLATE)
                 .add(ModBlocks.ELECTRIC_FURNACE)
                 .add(ModBlocks.SOLAR_PANEL)
                 .add(ModBlocks.COAL_GENERATOR);

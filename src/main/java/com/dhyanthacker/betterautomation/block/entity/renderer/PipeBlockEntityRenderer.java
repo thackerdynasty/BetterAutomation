@@ -28,8 +28,8 @@ public class PipeBlockEntityRenderer implements BlockEntityRenderer<PipeBlockEnt
         BetterAutomation.LOGGER.info("Rendering ItemStack: " + stack.getName().getString());
 
         matrices.push();
-        matrices.translate(.5f, 1.15f, .5f);
-        matrices.scale(.5f, .5f, .5f);
+        matrices.translate(.5f, 0f, .5f);
+        matrices.scale(.25f, .25f, .25f);
 
         itemRenderer.renderItem(stack, ModelTransformationMode.GUI, getLightLevel(entity.getWorld(),
                 entity.getPos()), OverlayTexture.DEFAULT_UV, matrices, vertexConsumers, entity.getWorld(), 1);

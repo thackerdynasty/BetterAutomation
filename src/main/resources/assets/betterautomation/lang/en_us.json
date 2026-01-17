@@ -3,6 +3,8 @@
   "item.betterautomation.battery.tooltip": "Battery Left: %1$s",
   "block.betterautomation.solar_panel": "Solar Panel",
   "block.betterautomation.lithium_ore": "Lithium Ore",
+  "block.betterautomation.deepslate_lithium_ore": "Deepslate Lithium Ore",
+  "block.betterautomation.lithium_block": "Block of Lithium",
   "block.betterautomation.pipe": "Pipe",
   "item.betterautomation.raw_lithium": "Raw Lithium",
   "item.betterautomation.lithium": "Lithium",
