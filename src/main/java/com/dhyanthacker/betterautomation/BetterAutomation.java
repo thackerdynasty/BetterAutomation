@@ -7,6 +7,7 @@ import com.dhyanthacker.betterautomation.item.ModItemGroups;
 import com.dhyanthacker.betterautomation.item.ModItems;
 import com.dhyanthacker.betterautomation.recipe.ModRecipes;
 import com.dhyanthacker.betterautomation.screen.ModScreenHandlers;
+import com.dhyanthacker.betterautomation.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ public class BetterAutomation implements ModInitializer {
 
 		ModBlocks.registerModBlocks();
 		ModBlockEntities.registerBlockEntities();
+
+		ModWorldGeneration.generateModWorldGen();
 
 		ModScreenHandlers.registerScreenHandlers();
 
