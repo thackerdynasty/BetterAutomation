@@ -3,5 +3,6 @@ package com.dhyanthacker.betterautomation.world.gen;
 public class ModWorldGeneration {
     public static void generateModWorldGen() {
         ModOreGeneration.generateOres();
+        ModFluidGeneration.generateFluids();
     }
 }

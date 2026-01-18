@@ -18,6 +18,7 @@ public class BetterAutomationDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ModLootTableProvider::new);
 		pack.addProvider(ModRecipeProvider::new);
 		pack.addProvider(ModRegistryDataGenerator::new);
+		pack.addProvider(ModFluidTagProvider::new);
 	}
 
 	@Override

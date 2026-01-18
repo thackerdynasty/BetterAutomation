@@ -1,0 +1,10 @@
+{
+  "type": "betterautomation:electric_furnace",
+  "ingredient": {
+    "item": "betterautomation:deepslate_lithium_ore"
+  },
+  "smeltingTime": 150,
+  "result": {
+    "id": "betterautomation:lithium"
+  }
+}

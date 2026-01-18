@@ -2,9 +2,8 @@ package com.dhyanthacker.betterautomation.block;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.block.custom.*;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.ExperienceDroppingBlock;
+import com.dhyanthacker.betterautomation.fluid.ModFluids;
+import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -24,6 +23,9 @@ public class ModBlocks {
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
                     .strength(4.5f, 3f)));
 
+    public static final Block RAW_LITHIUM_BLOCK = registerBlock("raw_lithium_block",
+            new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
+
     public static final Block LITHIUM_BLOCK = registerBlock("lithium_block",
             new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
 
@@ -38,6 +40,9 @@ public class ModBlocks {
 
     public static final Block COAL_GENERATOR = registerBlock("coal_generator",
             new CoalGeneratorBlock(AbstractBlock.Settings.create().strength(3f).requiresTool()));
+
+    public static final Block OIL = registerBlockWithoutBlockItem("oil",
+            new FluidBlock(ModFluids.STILL_OIL, AbstractBlock.Settings.copy(Blocks.WATER)));
 
     private static Block registerBlock(String name, Block block) {
         registerBlockItem(name, block);

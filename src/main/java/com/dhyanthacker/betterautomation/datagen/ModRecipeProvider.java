@@ -21,14 +21,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter recipeExporter) {
-        List<ItemConvertible> LITHIUM_SMELTABLES = List.of(ModItems.RAW_LITHIUM, ModBlocks.LITHIUM_ORE);
-
-        // moved to electric furnace
-//        offerSmelting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 200, "lithium");
-//        offerBlasting(recipeExporter, LITHIUM_SMELTABLES, RecipeCategory.MISC, ModItems.LITHIUM, .25f, 100, "lithium");
-
         offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.LITHIUM,
                 RecipeCategory.BUILDING_BLOCKS, ModBlocks.LITHIUM_BLOCK);
+        offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.RAW_LITHIUM,
+                RecipeCategory.BUILDING_BLOCKS, ModBlocks.RAW_LITHIUM_BLOCK);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, ModItems.BATTERY)
                 .pattern(" I ")
@@ -51,6 +47,19 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .criterion(hasItem(ModItems.LITHIUM), conditionsFromItem(ModItems.LITHIUM))
                 .criterion(hasItem(ModItems.BATTERY), conditionsFromItem(ModItems.BATTERY))
+                .offerTo(recipeExporter);
+        // wire recipe: gold + rubber(to be added) -> wire
+        // electric furnace recipe: furnace + circuit board(new recipe) + copper -> electric furnace
+        // circuit board recipe: plastic + copper + gold -> circuit board
+        // plastic recipe:
+        ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, ModBlocks.PIPE, 4)
+                .pattern("IGI")
+                .pattern("IGI")
+                .pattern("IGI")
+                .input('I', Items.IRON_INGOT)
+                .input('G', Items.GLASS)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.GLASS), conditionsFromItem(Items.GLASS))
                 .offerTo(recipeExporter);
     }
 }

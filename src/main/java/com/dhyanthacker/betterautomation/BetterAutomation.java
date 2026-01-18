@@ -3,6 +3,7 @@ package com.dhyanthacker.betterautomation;
 import com.dhyanthacker.betterautomation.block.ModBlocks;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
+import com.dhyanthacker.betterautomation.fluid.ModFluids;
 import com.dhyanthacker.betterautomation.item.ModItemGroups;
 import com.dhyanthacker.betterautomation.item.ModItems;
 import com.dhyanthacker.betterautomation.recipe.ModRecipes;
@@ -28,6 +29,8 @@ public class BetterAutomation implements ModInitializer {
 
 		ModBlocks.registerModBlocks();
 		ModBlockEntities.registerBlockEntities();
+
+		ModFluids.registerFluids();
 
 		ModWorldGeneration.generateModWorldGen();
 

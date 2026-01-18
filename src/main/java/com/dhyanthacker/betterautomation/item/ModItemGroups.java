@@ -27,9 +27,11 @@ public class ModItemGroups {
                             .displayName(Text.translatable("itemgroup.betterautomation.ores"))
                             .entries((displayContext, entries) -> {
                                 entries.add(ModBlocks.LITHIUM_ORE);
+                                entries.add(ModBlocks.DEEPSLATE_LITHIUM_ORE);
                                 entries.add(ModItems.RAW_LITHIUM);
                                 entries.add(ModItems.LITHIUM);
                                 entries.add(ModBlocks.LITHIUM_BLOCK);
+                                entries.add(ModBlocks.RAW_LITHIUM_BLOCK);
                             }).build());
 
     public static final ItemGroup MACHINES_GROUP =
@@ -38,6 +40,7 @@ public class ModItemGroups {
                             .displayName(Text.translatable("itemgroup.betterautomation.machines"))
                             .entries((displayContext, entries) -> {
                                 entries.add(ModBlocks.ELECTRIC_FURNACE);
+                                entries.add(ModItems.OIL_BUCKET);
                             }).build());
 
     public static final ItemGroup MOVEMENT_GROUP =

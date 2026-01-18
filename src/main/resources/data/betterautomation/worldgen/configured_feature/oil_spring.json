@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:spring_feature",
+  "config": {
+    "state": {
+      "Name": "betterautomation:oil"
+    },
+    "rock_count": 4,
+    "hole_count": 1,
+    "requires_block_below": true,
+    "valid_blocks": [
+      "minecraft:stone",
+      "minecraft:deepslate"
+    ]
+  }
+}

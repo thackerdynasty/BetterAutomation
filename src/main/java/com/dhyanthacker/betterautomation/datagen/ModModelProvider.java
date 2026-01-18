@@ -19,9 +19,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_LITHIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_BLOCK);
-
-//        blockStateModelGenerator.registerNorthDefaultHorizontalRotation(ModBlocks.PIPE);
-//        blockStateModelGenerator.registerNorthDefaultHorizontalRotation(ModBlocks.WIRE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_LITHIUM_BLOCK);
     }
 
     @Override
@@ -29,5 +27,6 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.BATTERY, Models.GENERATED);
         itemModelGenerator.register(ModItems.LITHIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_LITHIUM, Models.GENERATED);
+        itemModelGenerator.register(ModItems.OIL_BUCKET, Models.GENERATED);
     }
 }
