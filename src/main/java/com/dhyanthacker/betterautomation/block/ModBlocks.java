@@ -18,14 +18,19 @@ public class ModBlocks {
     public static final Block LITHIUM_ORE = registerBlock("lithium_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
                     .strength(3f, 3f)));
-
     public static final Block DEEPSLATE_LITHIUM_ORE = registerBlock("deepslate_lithium_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 7), AbstractBlock.Settings.create().requiresTool()
                     .strength(4.5f, 3f)));
 
+    public static final Block SILICON_ORE = registerBlock("silicon_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(1, 5), AbstractBlock.Settings.create().requiresTool()
+                    .strength(3f, 3f)));
+    public static final Block DEEPSLATE_SILICON_ORE = registerBlock("deepslate_silicon_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(1, 5), AbstractBlock.Settings.create().requiresTool()
+                    .strength(4.5f, 3f)));
+
     public static final Block RAW_LITHIUM_BLOCK = registerBlock("raw_lithium_block",
             new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
-
     public static final Block LITHIUM_BLOCK = registerBlock("lithium_block",
             new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
 

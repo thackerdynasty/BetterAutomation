@@ -1,0 +1,10 @@
+{
+  "type": "betterautomation:electric_furnace",
+  "ingredient": {
+    "item": "betterautomation:raw_silicon"
+  },
+  "smeltingTime": 150,
+  "result": {
+    "id": "betterautomation:silicon"
+  }
+}

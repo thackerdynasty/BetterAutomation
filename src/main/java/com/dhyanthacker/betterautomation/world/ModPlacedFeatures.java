@@ -16,14 +16,20 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> LITHIUM_ORE_PLACED_KEY = registerKey("lithium_ore_placed");
     public static final RegistryKey<PlacedFeature> OIL_SPRING_PLACED_KEY = registerKey("oil_spring_placed");
     public static final RegistryKey<PlacedFeature> OIL_LAKE_PLACED_KEY = registerKey("oil_lake_placed");
+    public static final RegistryKey<PlacedFeature> SILICON_ORE_PLACED_KEY = registerKey("silicon_ore_placed");
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
         var configuredFeatures = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
         register(context, LITHIUM_ORE_PLACED_KEY,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.LITHIUM_ORE_KEY),
-                ModOrePlacement.modifiersWithCount(10,
-                        HeightRangePlacementModifier.trapezoid(YOffset.fixed(-60), YOffset.fixed(30))));
+                ModOrePlacement.modifiersWithCount(7,
+                        HeightRangePlacementModifier.trapezoid(YOffset.fixed(-52), YOffset.fixed(30))));
+
+        register(context, SILICON_ORE_PLACED_KEY,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SILICON_ORE_KEY),
+                ModOrePlacement.modifiersWithCount(5,
+                        HeightRangePlacementModifier.trapezoid(YOffset.fixed(-52), YOffset.fixed(-15))));
 
         register(context, OIL_SPRING_PLACED_KEY,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.OIL_SPRING_KEY),

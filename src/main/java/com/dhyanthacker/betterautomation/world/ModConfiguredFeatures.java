@@ -24,6 +24,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> LITHIUM_ORE_KEY = registerKey("lithium_ore");
     public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_SPRING_KEY = registerKey("oil_spring");
     public static final RegistryKey<ConfiguredFeature<?, ?>> OIL_LAKE_KEY = registerKey("oil_lake");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> SILICON_ORE_KEY = registerKey("silicon_ore");
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context) {
         RuleTest stoneReplaceables = new TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES);
@@ -32,8 +33,12 @@ public class ModConfiguredFeatures {
         List<OreFeatureConfig.Target> lithiumOres =
                 List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.LITHIUM_ORE.getDefaultState()),
                         OreFeatureConfig.createTarget(deepslateReplaceables, ModBlocks.DEEPSLATE_LITHIUM_ORE.getDefaultState()));
+        List<OreFeatureConfig.Target> siliconOres =
+                List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.SILICON_ORE.getDefaultState()),
+                        OreFeatureConfig.createTarget(deepslateReplaceables, ModBlocks.DEEPSLATE_SILICON_ORE.getDefaultState()));
 
         register(context, LITHIUM_ORE_KEY, Feature.ORE, new OreFeatureConfig(lithiumOres, 8));
+        register(context, SILICON_ORE_KEY, Feature.ORE, new OreFeatureConfig(siliconOres, 4));
 
         RegistryEntryList<Block> springReplaceables = RegistryEntryList.of(
                 RegistryEntry.of(Blocks.STONE),

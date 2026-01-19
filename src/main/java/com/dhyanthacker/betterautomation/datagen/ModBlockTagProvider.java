@@ -18,6 +18,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(ModBlocks.LITHIUM_ORE)
                 .add(ModBlocks.DEEPSLATE_LITHIUM_ORE)
+                .add(ModBlocks.SILICON_ORE)
+                .add(ModBlocks.DEEPSLATE_SILICON_ORE)
                 .add(ModBlocks.LITHIUM_BLOCK)
                 .add(ModBlocks.RAW_LITHIUM_BLOCK)
                 .add(ModBlocks.ELECTRIC_FURNACE)
@@ -30,5 +32,9 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.ELECTRIC_FURNACE)
                 .add(ModBlocks.SOLAR_PANEL)
                 .add(ModBlocks.COAL_GENERATOR);
+
+        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(ModBlocks.SILICON_ORE)
+                .add(ModBlocks.DEEPSLATE_SILICON_ORE);
     }
 }

@@ -12,8 +12,12 @@ import net.minecraft.util.Identifier;
 
 public class ModItems {
     public static final Item BATTERY = registerItem("battery", new BatteryItem(new Item.Settings()));
+
     public static final Item RAW_LITHIUM = registerItem("raw_lithium", new Item(new Item.Settings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new Item.Settings()));
+
+    public static final Item RAW_SILICON = registerItem("raw_silicon", new Item(new Item.Settings()));
+    public static final Item SILICON = registerItem("silicon", new Item(new Item.Settings()));
 
     public static final Item CIRCUIT_BOARD = registerItem("circuit_board", new Item(new Item.Settings()));
 

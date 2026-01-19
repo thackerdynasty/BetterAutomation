@@ -32,6 +32,10 @@ public class ModItemGroups {
                                 entries.add(ModItems.LITHIUM);
                                 entries.add(ModBlocks.LITHIUM_BLOCK);
                                 entries.add(ModBlocks.RAW_LITHIUM_BLOCK);
+                                entries.add(ModBlocks.SILICON_ORE);
+                                entries.add(ModBlocks.DEEPSLATE_SILICON_ORE);
+                                entries.add(ModItems.RAW_SILICON);
+                                entries.add(ModItems.SILICON);
                             }).build());
 
     public static final ItemGroup MACHINES_GROUP =
