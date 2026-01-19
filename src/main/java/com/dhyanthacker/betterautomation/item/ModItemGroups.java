@@ -18,6 +18,7 @@ public class ModItemGroups {
                             .entries((displayContext, entries) -> {
                                 entries.add(ModBlocks.SOLAR_PANEL);
                                 entries.add(ModItems.BATTERY);
+                                entries.add(ModItems.INFINITE_BATTERY);
                                 entries.add(ModBlocks.COAL_GENERATOR);
                             }).build());
 

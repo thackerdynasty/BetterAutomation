@@ -3,6 +3,7 @@ package com.dhyanthacker.betterautomation.item;
 import com.dhyanthacker.betterautomation.BetterAutomation;
 import com.dhyanthacker.betterautomation.fluid.ModFluids;
 import com.dhyanthacker.betterautomation.item.custom.BatteryItem;
+import com.dhyanthacker.betterautomation.item.custom.creative.InfiniteBatteryItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -11,7 +12,9 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
-    public static final Item BATTERY = registerItem("battery", new BatteryItem(new Item.Settings()));
+    public static final Item BATTERY = registerItem("battery", new BatteryItem(new Item.Settings().maxCount(1)));
+    public static final Item INFINITE_BATTERY = registerItem("infinite_battery",
+            new InfiniteBatteryItem(new Item.Settings().maxCount(1).fireproof()));
 
     public static final Item RAW_LITHIUM = registerItem("raw_lithium", new Item(new Item.Settings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new Item.Settings()));

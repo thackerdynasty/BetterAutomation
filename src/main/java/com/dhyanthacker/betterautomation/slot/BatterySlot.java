@@ -1,6 +1,7 @@
 package com.dhyanthacker.betterautomation.slot;
 
 import com.dhyanthacker.betterautomation.item.ModItems;
+import com.dhyanthacker.betterautomation.item.custom.BatteryItem;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -17,6 +18,6 @@ public class BatterySlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return stack.isOf(ModItems.BATTERY);
+        return stack.getItem() instanceof BatteryItem;
     }
 }

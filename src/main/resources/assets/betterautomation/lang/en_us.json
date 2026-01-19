@@ -1,6 +1,7 @@
 {
   "item.betterautomation.battery": "Battery",
   "item.betterautomation.battery.tooltip": "Battery Left: %1$s",
+  "item.betterautomation.infinite_battery": "Battery",
   "block.betterautomation.solar_panel": "Solar Panel",
   "block.betterautomation.lithium_ore": "Lithium Ore",
   "block.betterautomation.deepslate_lithium_ore": "Deepslate Lithium Ore",
@@ -10,9 +11,9 @@
   "block.betterautomation.raw_lithium_block": "Block of Raw Lithium",
   "block.betterautomation.pipe": "Pipe",
   "item.betterautomation.raw_lithium": "Raw Lithium",
-  "item.betterautomation.lithium": "Lithium",
+  "item.betterautomation.lithium": "Lithium Ingot",
   "item.betterautomation.raw_silicon": "Raw Silicon",
-  "item.betterautomation.silicon": "Silicon",
+  "item.betterautomation.silicon": "Silicon Ingot",
   "item.betterautomation.oil_bucket": "Oil Bucket",
   "item.betterautomation.plastic": "Plastic",
   "item.betterautomation.rubber": "Rubber",
@@ -25,5 +26,7 @@
   "block.betterautomation.wire": "Wire",
   "block.betterautomation.coal_generator": "Coal Generator",
   "itemgroup.betterautomation.materials": "Materials",
-  "itemgroup.betterautomation.components": "Components"
+  "itemgroup.betterautomation.components": "Components",
+  "item.betterautomation.infinite_battery.tooltip": "Battery left: §eInfinite§r",
+  "item.betterautomation.infinite_battery.creative_mode_only": "§4Creative Only§r"
 }

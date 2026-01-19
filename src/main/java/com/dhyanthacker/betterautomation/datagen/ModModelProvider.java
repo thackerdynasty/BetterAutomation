@@ -18,6 +18,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SOLAR_PANEL);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_LITHIUM_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SILICON_ORE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSLATE_SILICON_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.LITHIUM_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.RAW_LITHIUM_BLOCK);
     }
@@ -25,8 +27,11 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(ModItems.BATTERY, Models.GENERATED);
+        itemModelGenerator.register(ModItems.INFINITE_BATTERY, Models.GENERATED);
         itemModelGenerator.register(ModItems.LITHIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_LITHIUM, Models.GENERATED);
+        itemModelGenerator.register(ModItems.RAW_SILICON, Models.GENERATED);
+        itemModelGenerator.register(ModItems.SILICON, Models.GENERATED);
         itemModelGenerator.register(ModItems.OIL_BUCKET, Models.GENERATED);
         itemModelGenerator.register(ModItems.PLASTIC, Models.GENERATED);
         itemModelGenerator.register(ModItems.CIRCUIT_BOARD, Models.GENERATED);
