@@ -15,8 +15,13 @@ public class ModItems {
     public static final Item RAW_LITHIUM = registerItem("raw_lithium", new Item(new Item.Settings()));
     public static final Item LITHIUM = registerItem("lithium", new Item(new Item.Settings()));
 
+    public static final Item CIRCUIT_BOARD = registerItem("circuit_board", new Item(new Item.Settings()));
+
     public static final Item OIL_BUCKET = registerItem("oil_bucket",
             new BucketItem(ModFluids.STILL_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1)));
+
+    public static final Item PLASTIC = registerItem("plastic", new Item(new Item.Settings()));
+    public static final Item RUBBER = registerItem("rubber", new Item(new Item.Settings()));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, Identifier.of(BetterAutomation.MOD_ID, name), item);

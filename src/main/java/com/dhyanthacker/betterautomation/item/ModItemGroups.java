@@ -52,6 +52,23 @@ public class ModItemGroups {
                                 entries.add(ModBlocks.WIRE);
                             }).build());
 
+    public static final ItemGroup MATERIALS_GROUP =
+            Registry.register(Registries.ITEM_GROUP, Identifier.of(BetterAutomation.MOD_ID, "materials"),
+                    FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.PLASTIC))
+                            .displayName(Text.translatable("itemgroup.betterautomation.materials"))
+                            .entries((displayContext, entries) -> {
+                                entries.add(ModItems.PLASTIC);
+                                entries.add(ModItems.RUBBER);
+                            }).build());
+
+    public static final ItemGroup COMPONENTS_GROUP =
+            Registry.register(Registries.ITEM_GROUP, Identifier.of(BetterAutomation.MOD_ID, "components"),
+                    FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.CIRCUIT_BOARD))
+                            .displayName(Text.translatable("itemgroup.betterautomation.components"))
+                            .entries((displayContext, entries) -> {
+                                entries.add(ModItems.CIRCUIT_BOARD);
+                            }).build());
+
     public static void registerItemGroups() {
         BetterAutomation.LOGGER.info("Registering Mod Item Groups for " + BetterAutomation.MOD_ID);
     }

@@ -28,5 +28,8 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.LITHIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_LITHIUM, Models.GENERATED);
         itemModelGenerator.register(ModItems.OIL_BUCKET, Models.GENERATED);
+        itemModelGenerator.register(ModItems.PLASTIC, Models.GENERATED);
+        itemModelGenerator.register(ModItems.CIRCUIT_BOARD, Models.GENERATED);
+        itemModelGenerator.register(ModItems.RUBBER, Models.GENERATED);
     }
 }

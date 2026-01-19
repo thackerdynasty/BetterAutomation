@@ -10,11 +10,16 @@
   "item.betterautomation.raw_lithium": "Raw Lithium",
   "item.betterautomation.lithium": "Lithium",
   "item.betterautomation.oil_bucket": "Oil Bucket",
+  "item.betterautomation.plastic": "Plastic",
+  "item.betterautomation.rubber": "Rubber",
+  "item.betterautomation.circuit_board": "Circuit Board",
   "itemgroup.betterautomation.ores": "BetterAutomation Ores",
   "itemgroup.betterautomation.power": "BetterAutomation Power",
   "block.betterautomation.electric_furnace": "Electric Furnace",
   "itemgroup.betterautomation.machines": "Machines",
   "itemgroup.betterautomation.movement": "Movement",
   "block.betterautomation.wire": "Wire",
-  "block.betterautomation.coal_generator": "Coal Generator"
+  "block.betterautomation.coal_generator": "Coal Generator",
+  "itemgroup.betterautomation.materials": "Materials",
+  "itemgroup.betterautomation.components": "Components"
 }
