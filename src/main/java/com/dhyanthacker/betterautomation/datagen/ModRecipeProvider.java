@@ -29,6 +29,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.RAW_LITHIUM,
                 RecipeCategory.BUILDING_BLOCKS, ModBlocks.RAW_LITHIUM_BLOCK);
 
+        offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.SILICON,
+                RecipeCategory.BUILDING_BLOCKS, ModBlocks.SILICON_BLOCK);
+        offerReversibleCompactingRecipes(recipeExporter, RecipeCategory.MISC, ModItems.RAW_SILICON,
+                RecipeCategory.BUILDING_BLOCKS, ModBlocks.RAW_SILICON_BLOCK);
+
         offerSmelting(recipeExporter, List.of(ModItems.OIL_BUCKET), RecipeCategory.MISC, ModItems.RUBBER, 0.1f, 200, "oil_bucket");
         offerBlasting(recipeExporter, List.of(ModItems.OIL_BUCKET), RecipeCategory.MISC, ModItems.RUBBER, 0.1f, 100, "oil_bucket");
 

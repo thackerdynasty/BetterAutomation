@@ -37,6 +37,8 @@ public class ModItemGroups {
                                 entries.add(ModBlocks.DEEPSLATE_SILICON_ORE);
                                 entries.add(ModItems.RAW_SILICON);
                                 entries.add(ModItems.SILICON);
+                                entries.add(ModBlocks.RAW_SILICON_BLOCK);
+                                entries.add(ModBlocks.SILICON_BLOCK);
                             }).build());
 
     public static final ItemGroup MACHINES_GROUP =

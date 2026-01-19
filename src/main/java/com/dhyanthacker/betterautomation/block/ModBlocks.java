@@ -34,6 +34,11 @@ public class ModBlocks {
     public static final Block LITHIUM_BLOCK = registerBlock("lithium_block",
             new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
 
+    public static final Block RAW_SILICON_BLOCK = registerBlock("raw_silicon_block",
+            new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
+    public static final Block SILICON_BLOCK = registerBlock("silicon_block",
+            new Block(AbstractBlock.Settings.create().strength(5f).requiresTool()));
+
     public static final Block ELECTRIC_FURNACE = registerBlock("electric_furnace",
             new ElectricFurnaceBlock(AbstractBlock.Settings.create().requiresTool().strength(4f)));
 
