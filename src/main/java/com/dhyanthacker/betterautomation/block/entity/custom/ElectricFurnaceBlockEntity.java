@@ -7,6 +7,7 @@ import com.dhyanthacker.betterautomation.block.custom.ElectricFurnaceBlock;
 import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.component.ModDataComponentTypes;
+import com.dhyanthacker.betterautomation.item.custom.creative.InfiniteBatteryItem;
 import com.dhyanthacker.betterautomation.recipe.ElectricFurnaceRecipe;
 import com.dhyanthacker.betterautomation.recipe.ElectricFurnaceRecipeInput;
 import com.dhyanthacker.betterautomation.recipe.ModRecipes;
@@ -17,6 +18,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -141,6 +143,7 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                 }
             }
         }
+        refillInfiniteBattery();
     }
 
     private boolean hasBattery() {
@@ -150,6 +153,15 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
                     batteryStack.get(ModDataComponentTypes.BATTERY_POWER) > 0;
         }
         return false;
+    }
+
+    private void refillInfiniteBattery() {
+        if (!hasBattery()) return;
+        ItemStack batteryStack = getStack(BATTERY_SLOT);
+        Item batteryItem = batteryStack.getItem();
+        if (batteryItem instanceof InfiniteBatteryItem infiniteBattery) {
+            infiniteBattery.inventoryTick(batteryStack, this.getWorld(), null, BATTERY_SLOT, false);
+        }
     }
 
     private void smeltItem() {
@@ -197,14 +209,14 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
         if (hasBattery()) {
             isPowered = true;
             isWired = false;
-        } else if (hasInputPipe() && getInputType() == PipeType.ENERGY && inputWireHasPower(8)) {
+        } else if (hasInputPipe() && (getInputType() == PipeType.ENERGY && inputWireHasPower(8))) {
             isPowered = true;
             isWired = true;
         } else {
             isPowered = false;
             isWired = false;
         }
-        return hasBattery() || hasInputPipe() && getInputType() == PipeType.ENERGY && inputWireHasPower(8);
+        return hasBattery() || (hasInputPipe() && getInputType() == PipeType.ENERGY && inputWireHasPower(8));
     }
 
     @Override

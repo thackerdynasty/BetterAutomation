@@ -1,8 +1,8 @@
 {
   "variants": {
     "facing=north": { "model": "betterautomation:block/pipe" },
-    "facing=south": { "model": "betterautomation:block/pipe" },
-    "facing=east":  { "model": "betterautomation:block/pipe" },
-    "facing=west":  { "model": "betterautomation:block/pipe" }
+    "facing=south": { "model": "betterautomation:block/pipe", "y": 180 },
+    "facing=east":  { "model": "betterautomation:block/pipe", "y": 90 },
+    "facing=west":  { "model": "betterautomation:block/pipe", "y": 270 }
   }
 }
