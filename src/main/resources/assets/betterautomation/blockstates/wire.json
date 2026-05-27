@@ -1,8 +1,20 @@
 {
   "variants": {
-    "facing=north": { "model": "betterautomation:block/wire" },
-    "facing=south": { "model": "betterautomation:block/wire", "y": 180 },
-    "facing=east":  { "model": "betterautomation:block/wire", "y": 90 },
-    "facing=west":  { "model": "betterautomation:block/wire", "y": 270 }
+    "facing=north,shape=straight": { "model": "betterautomation:block/wire" },
+    "facing=south,shape=straight": { "model": "betterautomation:block/wire", "y": 180 },
+    "facing=east,shape=straight":  { "model": "betterautomation:block/wire", "y": 90 },
+    "facing=west,shape=straight":  { "model": "betterautomation:block/wire", "y": 270 },
+
+    "facing=north,shape=corner": { "model": "betterautomation:block/wire_corner", "y": 90 },
+    "facing=east,shape=corner":  { "model": "betterautomation:block/wire_corner", "y": 180 },
+    "facing=south,shape=corner": { "model": "betterautomation:block/wire_corner", "y": 270 },
+    "facing=west,shape=corner":  { "model": "betterautomation:block/wire_corner" },
+
+    "facing=north,shape=threeway": { "model": "betterautomation:block/wire_threeway", "y": 90 },
+    "facing=east,shape=threeway":  { "model": "betterautomation:block/wire_threeway", "y": 180 },
+    "facing=south,shape=threeway": { "model": "betterautomation:block/wire_threeway", "y": 270 },
+    "facing=west,shape=threeway":  { "model": "betterautomation:block/wire_threeway" },
+
+    "facing=north,shape=cross": { "model": "betterautomation:block/wire_cross" }
   }
 }
