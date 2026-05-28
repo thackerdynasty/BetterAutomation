@@ -1,8 +1,31 @@
 {
   "variants": {
-    "facing=north": { "model": "betterautomation:block/pipe" },
-    "facing=south": { "model": "betterautomation:block/pipe", "y": 180 },
-    "facing=east":  { "model": "betterautomation:block/pipe", "y": 90 },
-    "facing=west":  { "model": "betterautomation:block/pipe", "y": 270 }
+    "facing=north,shape=straight": { "model": "betterautomation:block/pipe" },
+    "facing=south,shape=straight": { "model": "betterautomation:block/pipe", "y": 180 },
+    "facing=east,shape=straight": { "model": "betterautomation:block/pipe", "y": 90 },
+    "facing=west,shape=straight": { "model": "betterautomation:block/pipe", "y": 270 },
+    "facing=up,shape=straight": { "model": "betterautomation:block/pipe", "x": 90, "y": 90 },
+    "facing=down,shape=straight": { "model": "betterautomation:block/pipe", "x": 90, "y": 90 },
+
+    "facing=north,shape=corner": { "model": "betterautomation:block/pipe_corner", "y": 90 },
+    "facing=east,shape=corner": { "model": "betterautomation:block/pipe_corner", "y": 180 },
+    "facing=south,shape=corner": { "model": "betterautomation:block/pipe_corner", "y": 270 },
+    "facing=west,shape=corner": { "model": "betterautomation:block/pipe_corner" },
+    "facing=up,shape=corner": { "model": "betterautomation:block/pipe_corner" },
+    "facing=down,shape=corner": { "model": "betterautomation:block/pipe_corner" },
+
+    "facing=north,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270, "y": 90 },
+    "facing=east,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270, "y": 180 },
+    "facing=south,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270, "y": 270 },
+    "facing=west,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270 },
+    "facing=up,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270 },
+    "facing=down,shape=corner_up": { "model": "betterautomation:block/pipe_corner", "x": 270 },
+
+    "facing=north,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90, "y": 90 },
+    "facing=east,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90, "y": 180 },
+    "facing=south,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90, "y": 270 },
+    "facing=west,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90 },
+    "facing=up,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90 },
+    "facing=down,shape=corner_down": { "model": "betterautomation:block/pipe_corner", "x": 90 }
   }
 }

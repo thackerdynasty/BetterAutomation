@@ -1,6 +1,7 @@
 package com.dhyanthacker.betterautomation.block.custom;
 
 import com.dhyanthacker.betterautomation.block.api.PipeType;
+import com.dhyanthacker.betterautomation.block.api.PipeDirection;
 import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.block.entity.custom.WireBlockEntity;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WireBlock extends BlockWithEntity {
     public static final MapCodec<WireBlock> CODEC = createCodec(WireBlock::new);
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<WireShape> SHAPE = EnumProperty.of("shape", WireShape.class);
 
     public WireBlock(Settings settings) {
@@ -36,23 +37,7 @@ public class WireBlock extends BlockWithEntity {
 
     @Override
     protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction facing = state.get(FACING);
-        if (state.get(SHAPE) == WireShape.CROSS) {
-            return getCrossOutlineShape();
-        }
-
-        if (state.get(SHAPE) == WireShape.CORNER) {
-            return getCornerOutlineShape(facing);
-        }
-
-        if (state.get(SHAPE) == WireShape.THREEWAY) {
-            return getThreewayOutlineShape(facing);
-        }
-
-        return switch (facing) {
-            case NORTH, SOUTH -> Block.createCuboidShape(0, 6, 6, 16, 10, 10);
-            default -> Block.createCuboidShape(6, 6, 0, 10, 10, 16);
-        };
+        return getConnectedOutlineShape(state);
     }
 
     @Override
@@ -95,14 +80,37 @@ public class WireBlock extends BlockWithEntity {
     }
 
     private static BlockState updateConnectionState(BlockState state, BlockView world, BlockPos pos) {
-        boolean north = connectsToEnergy(world, pos.north());
-        boolean south = connectsToEnergy(world, pos.south());
-        boolean east = connectsToEnergy(world, pos.east());
-        boolean west = connectsToEnergy(world, pos.west());
+        boolean north = connectsToEnergy(world, pos, pos.north());
+        boolean south = connectsToEnergy(world, pos, pos.south());
+        boolean east = connectsToEnergy(world, pos, pos.east());
+        boolean west = connectsToEnergy(world, pos, pos.west());
+        boolean up = connectsToEnergy(world, pos, pos.up());
+        boolean down = connectsToEnergy(world, pos, pos.down());
 
-        if (north && south && east && west) {
-            return state.with(SHAPE, WireShape.CROSS)
-                    .with(FACING, Direction.NORTH); // Facing doesn't matter for cross shape
+        int horizontalConnections = count(north, south, east, west);
+        int verticalConnections = count(up, down);
+
+        if (verticalConnections == 2 && horizontalConnections >= 2) {
+            return state.with(SHAPE, WireShape.CROSS_VERTICAL)
+                    .with(FACING, getVerticalCrossFacing(north, south, east, west, state.get(FACING)));
+        }
+
+        if (verticalConnections == 2 && horizontalConnections == 1) {
+            return state.with(SHAPE, WireShape.THREEWAY_VERTICAL)
+                    .with(FACING, getFirstHorizontalDirection(north, south, east, west, state.get(FACING)));
+        }
+
+        if (verticalConnections == 1 && horizontalConnections > 0) {
+            return state.with(SHAPE, up ? WireShape.CORNER_UP : WireShape.CORNER_DOWN)
+                    .with(FACING, getFirstHorizontalDirection(north, south, east, west, state.get(FACING)));
+        }
+
+        if (verticalConnections > 0) {
+            return state.with(SHAPE, WireShape.STRAIGHT).with(FACING, Direction.UP);
+        }
+
+        if (horizontalConnections == 4) {
+            return state.with(SHAPE, WireShape.CROSS).with(FACING, Direction.NORTH);
         }
 
         if (((north && south) && (east || west)) || ((north || south) && (east && west))) {
@@ -119,20 +127,36 @@ public class WireBlock extends BlockWithEntity {
                 .with(FACING, getStraightFacing(north, south, east, west, state.get(FACING)));
     }
 
-    private static boolean connectsToEnergy(BlockView world, BlockPos pos) {
-        BlockState state = world.getBlockState(pos);
+    private static boolean connectsToEnergy(BlockView world, BlockPos wirePos, BlockPos neighborPos) {
+        BlockState state = world.getBlockState(neighborPos);
         if (state.getBlock() instanceof WireBlock) return true;
 
-        BlockEntity entity = world.getBlockEntity(pos);
-        return entity instanceof PipeableBlockEntity pipeable
-                && (pipeable.getInputType() == PipeType.ENERGY || pipeable.getOutputType() == PipeType.ENERGY);
+        BlockEntity entity = world.getBlockEntity(neighborPos);
+        if (!(entity instanceof PipeableBlockEntity pipeable)) return false;
+
+        return energySideTouchesWire(pipeable.getInputType(), pipeable.getInputDirection(), state, neighborPos, wirePos)
+                || energySideTouchesWire(pipeable.getOutputType(), pipeable.getOutputDirection(), state, neighborPos, wirePos);
+    }
+
+    private static boolean energySideTouchesWire(PipeType type, @Nullable PipeDirection pipeDirection, BlockState state,
+                                                 BlockPos pipeablePos, BlockPos wirePos) {
+        if (type != PipeType.ENERGY || pipeDirection == null) return false;
+        return pipeablePos.offset(pipeDirection.toDirection(state)).equals(wirePos);
+    }
+
+    private static int count(boolean... values) {
+        int count = 0;
+        for (boolean value : values) {
+            if (value) count++;
+        }
+        return count;
     }
 
     private static Direction getStraightFacing(boolean north, boolean south, boolean east, boolean west,
                                                Direction fallback) {
         if ((north || south) && !(east || west)) return Direction.EAST;
         if ((east || west) && !(north || south)) return Direction.NORTH;
-        return fallback;
+        return fallback.getAxis().isHorizontal() ? fallback : Direction.NORTH;
     }
 
     private static Direction getCornerFacing(boolean north, boolean south, boolean east, boolean west,
@@ -141,7 +165,7 @@ public class WireBlock extends BlockWithEntity {
         if (east && south) return Direction.EAST;
         if (south && west) return Direction.SOUTH;
         if (west && north) return Direction.WEST;
-        return fallback;
+        return fallback.getAxis().isHorizontal() ? fallback : Direction.NORTH;
     }
 
     private static Direction getThreewayFacing(boolean north, boolean south, boolean east, boolean west,
@@ -150,54 +174,109 @@ public class WireBlock extends BlockWithEntity {
         if (north && (east && south)) return Direction.EAST;
         if (south && (east && west)) return Direction.SOUTH;
         if (north && (south && west)) return Direction.WEST;
-        return fallback;
+        return fallback.getAxis().isHorizontal() ? fallback : Direction.NORTH;
     }
 
-    private static VoxelShape getCornerOutlineShape(Direction facing) {
-        VoxelShape center = Block.createCuboidShape(6, 6, 6, 10, 10, 10);
-        VoxelShape northArm = Block.createCuboidShape(6, 6, 0, 10, 10, 10);
-        VoxelShape southArm = Block.createCuboidShape(6, 6, 6, 10, 10, 16);
-        VoxelShape eastArm = Block.createCuboidShape(6, 6, 6, 16, 10, 10);
-        VoxelShape westArm = Block.createCuboidShape(0, 6, 6, 10, 10, 10);
+    private static Direction getFirstHorizontalDirection(boolean north, boolean south, boolean east, boolean west,
+                                                        Direction fallback) {
+        if (north) return Direction.NORTH;
+        if (east) return Direction.EAST;
+        if (south) return Direction.SOUTH;
+        if (west) return Direction.WEST;
+        return fallback.getAxis().isHorizontal() ? fallback : Direction.NORTH;
+    }
 
-        return switch (facing) {
-            case EAST -> VoxelShapes.union(center, eastArm, southArm);
-            case SOUTH -> VoxelShapes.union(center, southArm, westArm);
-            case WEST -> VoxelShapes.union(center, westArm, northArm);
-            default -> VoxelShapes.union(center, northArm, eastArm);
+    private static Direction getVerticalCrossFacing(boolean north, boolean south, boolean east, boolean west,
+                                                   Direction fallback) {
+        if (east || west) return Direction.NORTH;
+        if (north || south) return Direction.EAST;
+        return fallback.getAxis().isHorizontal() ? fallback : Direction.NORTH;
+    }
+
+    private static VoxelShape getConnectedOutlineShape(BlockState state) {
+        Direction facing = state.get(FACING);
+        return switch (state.get(SHAPE)) {
+            case CORNER -> getShapeForDirections(getHorizontalCornerDirections(facing));
+            case CORNER_UP -> getShapeForDirections(Direction.UP, getHorizontalFacingOrDefault(facing));
+            case CORNER_DOWN -> getShapeForDirections(Direction.DOWN, getHorizontalFacingOrDefault(facing));
+            case THREEWAY -> getShapeForDirections(getHorizontalThreewayDirections(facing));
+            case THREEWAY_VERTICAL -> getShapeForDirections(Direction.UP, Direction.DOWN, getHorizontalFacingOrDefault(facing));
+            case CROSS -> getShapeForDirections(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+            case CROSS_VERTICAL -> getVerticalCrossOutlineShape(facing);
+            default -> getStraightOutlineShape(facing);
         };
     }
 
-    private static VoxelShape getThreewayOutlineShape(Direction facing) {
-        VoxelShape center = Block.createCuboidShape(6, 6, 6, 10, 10, 10);
-        VoxelShape northArm = Block.createCuboidShape(6, 6, 0, 10, 10, 10);
-        VoxelShape southArm = Block.createCuboidShape(6, 6, 6, 10, 10, 16);
-        VoxelShape eastArm = Block.createCuboidShape(6, 6, 6, 16, 10, 10);
-        VoxelShape westArm = Block.createCuboidShape(0, 6, 6, 10, 10, 10);
+    private static VoxelShape getStraightOutlineShape(Direction facing) {
+        if (facing.getAxis() == Direction.Axis.Y) {
+            return getShapeForDirections(Direction.UP, Direction.DOWN);
+        }
 
+        if (facing == Direction.NORTH || facing == Direction.SOUTH) {
+            return getShapeForDirections(Direction.EAST, Direction.WEST);
+        }
+
+        return getShapeForDirections(Direction.NORTH, Direction.SOUTH);
+    }
+
+    private static VoxelShape getVerticalCrossOutlineShape(Direction facing) {
+        if (facing == Direction.EAST || facing == Direction.WEST) {
+            return getShapeForDirections(Direction.UP, Direction.DOWN, Direction.NORTH, Direction.SOUTH);
+        }
+
+        return getShapeForDirections(Direction.UP, Direction.DOWN, Direction.EAST, Direction.WEST);
+    }
+
+    private static Direction getHorizontalFacingOrDefault(Direction facing) {
+        return facing.getAxis().isHorizontal() ? facing : Direction.NORTH;
+    }
+
+    private static Direction[] getHorizontalCornerDirections(Direction facing) {
         return switch (facing) {
-            case EAST -> VoxelShapes.union(center, eastArm, northArm, southArm);
-            case SOUTH -> VoxelShapes.union(center, southArm, eastArm, westArm);
-            case WEST -> VoxelShapes.union(center, westArm, northArm, southArm);
-            default -> VoxelShapes.union(center, northArm, eastArm, westArm);
+            case NORTH -> new Direction[]{Direction.NORTH, Direction.EAST};
+            case EAST -> new Direction[]{Direction.EAST, Direction.SOUTH};
+            case SOUTH -> new Direction[]{Direction.SOUTH, Direction.WEST};
+            default -> new Direction[]{Direction.WEST, Direction.NORTH};
         };
     }
 
-    private static VoxelShape getCrossOutlineShape() {
-        VoxelShape center = Block.createCuboidShape(6, 6, 6, 10, 10, 10);
-        VoxelShape northArm = Block.createCuboidShape(6, 6, 0, 10, 10, 10);
-        VoxelShape southArm = Block.createCuboidShape(6, 6, 6, 10, 10, 16);
-        VoxelShape eastArm = Block.createCuboidShape(6, 6, 6, 16, 10, 10);
-        VoxelShape westArm = Block.createCuboidShape(0, 6, 6, 10, 10, 10);
+    private static Direction[] getHorizontalThreewayDirections(Direction facing) {
+        return switch (facing) {
+            case EAST -> new Direction[]{Direction.NORTH, Direction.EAST, Direction.SOUTH};
+            case SOUTH -> new Direction[]{Direction.EAST, Direction.SOUTH, Direction.WEST};
+            case WEST -> new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST};
+            default -> new Direction[]{Direction.NORTH, Direction.EAST, Direction.WEST};
+        };
+    }
 
-        return VoxelShapes.union(center, northArm, southArm, eastArm, westArm);
+    private static VoxelShape getShapeForDirections(Direction... directions) {
+        VoxelShape shape = Block.createCuboidShape(6, 6, 6, 10, 10, 10);
+        for (Direction direction : directions) {
+            shape = VoxelShapes.union(shape, getArmShape(direction));
+        }
+        return shape;
+    }
+
+    private static VoxelShape getArmShape(Direction direction) {
+        return switch (direction) {
+            case NORTH -> Block.createCuboidShape(6, 6, 0, 10, 10, 10);
+            case SOUTH -> Block.createCuboidShape(6, 6, 6, 10, 10, 16);
+            case EAST -> Block.createCuboidShape(6, 6, 6, 16, 10, 10);
+            case WEST -> Block.createCuboidShape(0, 6, 6, 10, 10, 10);
+            case UP -> Block.createCuboidShape(6, 6, 6, 10, 16, 10);
+            case DOWN -> Block.createCuboidShape(6, 0, 6, 10, 10, 10);
+        };
     }
 
     public enum WireShape implements StringIdentifiable {
         STRAIGHT("straight"),
         CORNER("corner"),
+        CORNER_UP("corner_up"),
+        CORNER_DOWN("corner_down"),
         THREEWAY("threeway"),
-        CROSS("cross");
+        THREEWAY_VERTICAL("threeway_vertical"),
+        CROSS("cross"),
+        CROSS_VERTICAL("cross_vertical");
 
         private final String name;
 

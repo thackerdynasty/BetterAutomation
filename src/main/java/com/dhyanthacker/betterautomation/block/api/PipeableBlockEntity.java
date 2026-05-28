@@ -11,9 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class PipeableBlockEntity extends BlockEntity {
     public PipeableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -29,7 +26,7 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         if (inputType == PipeType.ITEM) {
             return getDirectionalBlockEntity(getInputDirection()) instanceof PipeBlockEntity;
         } else if (inputType == PipeType.ENERGY) {
-            return !findEnergyWires(getInputDirection()).isEmpty();
+            return getDirectionalWire(getInputDirection()) != null;
         } else {
             BetterAutomation.LOGGER.warn("Unsupported pipe type: " + inputType);
             return false;
@@ -41,7 +38,7 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         if (outputType == PipeType.ITEM) {
             return getDirectionalBlockEntity(getOutputDirection()) instanceof PipeBlockEntity;
         } else if (outputType == PipeType.ENERGY) {
-            return !findEnergyWires(getOutputDirection()).isEmpty();
+            return getDirectionalWire(getOutputDirection()) != null;
         } else {
             BetterAutomation.LOGGER.warn("Unsupported pipe type: " + outputType);
             return false;
@@ -76,26 +73,20 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     public int extractEnergy(int amount) {
         if (amount <= 0 || getInputType() != PipeType.ENERGY) return 0;
 
-        int remainingAmount = amount;
-        for (WireBlockEntity inputWire : findEnergyWires(getInputDirection())) {
-            remainingAmount -= inputWire.extractPower(remainingAmount);
-            if (remainingAmount == 0) break;
-        }
+        WireBlockEntity inputWire = getDirectionalWire(getInputDirection());
+        if (inputWire == null) return 0;
 
-        return amount - remainingAmount;
+        return inputWire.extractPower(amount);
     }
 
     public int insertEnergy(int amount) {
         if (amount <= 0) return 0;
         if (getOutputType() != PipeType.ENERGY) return amount;
 
-        int remainingAmount = amount;
-        for (WireBlockEntity outputWire : findEnergyWires(getOutputDirection())) {
-            remainingAmount = outputWire.insertPower(remainingAmount);
-            if (remainingAmount == 0) break;
-        }
+        WireBlockEntity outputWire = getDirectionalWire(getOutputDirection());
+        if (outputWire == null) return amount;
 
-        return remainingAmount;
+        return outputWire.insertPower(amount);
     }
 
     public boolean inputWireHasPower() {
@@ -105,11 +96,8 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     public boolean inputWireHasPower(int requiredPower) {
         if (getInputType() != PipeType.ENERGY) return false;
 
-        for (WireBlockEntity inputWire : findEnergyWires(getInputDirection())) {
-            if (inputWire.hasPower(requiredPower)) return true;
-        }
-
-        return false;
+        WireBlockEntity inputWire = getDirectionalWire(getInputDirection());
+        return inputWire != null && inputWire.hasPower(requiredPower);
     }
 
     private BlockEntity getDirectionalBlockEntity(PipeDirection direction) {
@@ -120,23 +108,9 @@ public abstract class PipeableBlockEntity extends BlockEntity {
         return world.getBlockEntity(getPos().offset(blockDirection));
     }
 
-    private List<WireBlockEntity> findEnergyWires(PipeDirection preferredDirection) {
-        List<WireBlockEntity> wires = new ArrayList<>();
-        BlockEntity preferredEntity = getDirectionalBlockEntity(preferredDirection);
-        if (preferredEntity instanceof WireBlockEntity preferredWire) {
-            wires.add(preferredWire);
-        }
-
-        World world = getWorld();
-        if (world == null) return wires;
-
-        for (Direction direction : Direction.values()) {
-            BlockEntity entity = world.getBlockEntity(getPos().offset(direction));
-            if (entity instanceof WireBlockEntity wire && !wires.contains(wire)) {
-                wires.add(wire);
-            }
-        }
-
-        return wires;
+    private WireBlockEntity getDirectionalWire(PipeDirection direction) {
+        BlockEntity entity = getDirectionalBlockEntity(direction);
+        if (entity instanceof WireBlockEntity wire) return wire;
+        return null;
     }
 }
