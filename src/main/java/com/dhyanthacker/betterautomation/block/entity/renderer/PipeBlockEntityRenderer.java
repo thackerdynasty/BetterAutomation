@@ -25,7 +25,7 @@ public class PipeBlockEntityRenderer implements BlockEntityRenderer<PipeBlockEnt
         ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
         ItemStack stack = entity.getStack(0);
         if (stack.isEmpty()) return; // Don't render if the stack is empty
-//        BetterAutomation.LOGGER.info("Rendering ItemStack: " + stack.getName().getString());
+        BetterAutomation.LOGGER.info("Rendering ItemStack: " + stack.getName().getString());
 
         matrices.push();
         matrices.translate(.5f, 0f, .5f);
