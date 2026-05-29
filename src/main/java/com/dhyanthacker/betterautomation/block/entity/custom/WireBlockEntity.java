@@ -1,23 +1,21 @@
 package com.dhyanthacker.betterautomation.block.entity.custom;
 
+import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class WireBlockEntity extends BlockEntity {
     private static final int MAX_POWER = 1000;
@@ -94,11 +92,8 @@ public class WireBlockEntity extends BlockEntity {
         return remainingPower;
     }
 
-    /**
-     * Extracts power from this wire's whole connected network.
-     *
-     * @return power actually extracted, which may be less than requested
-     */
+    /// Returns the amount of power extracted,
+    /// which may be less than the requested amount if not enough power is available.
     public int extractPower(int amount) {
         if (amount <= 0) return 0;
 
@@ -263,7 +258,7 @@ public class WireBlockEntity extends BlockEntity {
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-        currentPower = Math.max(0, Math.min(MAX_POWER, nbt.getInt("power")));
+        currentPower = nbt.getInt("power");
     }
 
     @Override
