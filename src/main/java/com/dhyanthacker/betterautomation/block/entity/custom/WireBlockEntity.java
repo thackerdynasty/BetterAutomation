@@ -21,18 +21,26 @@ import java.util.Set;
 
 public class WireBlockEntity extends BlockEntity {
     private static final int MAX_POWER = 1000;
+    private static int networkCacheVersion = 0;
+
     private int currentPower = 0;
+    private int cachedNetworkVersion = -1;
+    private int cachedNetworkPower = 0;
+    @Nullable
+    private List<BlockPos> cachedNetworkPositions = null;
 
     public WireBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.WIRE_BE, pos, state);
     }
 
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (world.isClient()) return;
+        // Wire networks are traversed lazily and cached until the wire layout changes.
+    }
 
-        List<WireBlockEntity> network = collectConnectedWires(world, pos);
-        if (isNetworkOrigin(network, pos)) {
-            balancePower(network);
+    public static void invalidateNetworkCaches() {
+        networkCacheVersion++;
+        if (networkCacheVersion == Integer.MAX_VALUE) {
+            networkCacheVersion = 1;
         }
     }
 
@@ -44,11 +52,12 @@ public class WireBlockEntity extends BlockEntity {
         World world = getWorld();
         if (world == null) return currentPower;
 
-        int totalPower = 0;
-        for (WireBlockEntity wire : collectConnectedWires(world, getPos())) {
-            totalPower += wire.currentPower;
+        if (hasValidNetworkCache()) {
+            return cachedNetworkPower;
         }
-        return totalPower;
+
+        List<WireBlockEntity> network = rebuildNetworkCache(world);
+        return network.isEmpty() ? currentPower : cachedNetworkPower;
     }
 
     public boolean hasPower(int requiredPower) {
@@ -66,7 +75,7 @@ public class WireBlockEntity extends BlockEntity {
         World world = getWorld();
         if (world == null) return insertIntoThisWire(power);
 
-        List<WireBlockEntity> network = collectConnectedWires(world, getPos());
+        List<WireBlockEntity> network = getConnectedWires(world);
         int remainingPower = power;
 
         for (WireBlockEntity wire : network) {
@@ -81,6 +90,7 @@ public class WireBlockEntity extends BlockEntity {
         }
 
         balancePower(network);
+        updateNetworkCache(network);
         return remainingPower;
     }
 
@@ -95,7 +105,7 @@ public class WireBlockEntity extends BlockEntity {
         World world = getWorld();
         if (world == null) return extractFromThisWire(amount);
 
-        List<WireBlockEntity> network = collectConnectedWires(world, getPos());
+        List<WireBlockEntity> network = getConnectedWires(world);
         int remainingAmount = amount;
 
         for (WireBlockEntity wire : network) {
@@ -109,6 +119,7 @@ public class WireBlockEntity extends BlockEntity {
         }
 
         balancePower(network);
+        updateNetworkCache(network);
         return amount - remainingAmount;
     }
 
@@ -123,6 +134,44 @@ public class WireBlockEntity extends BlockEntity {
         int extractedPower = Math.min(currentPower, amount);
         setCurrentPower(currentPower - extractedPower);
         return extractedPower;
+    }
+
+    private List<WireBlockEntity> getConnectedWires(World world) {
+        if (hasValidNetworkCache()) {
+            List<WireBlockEntity> cachedWires = resolveCachedNetwork(world);
+            if (cachedWires != null) {
+                return cachedWires;
+            }
+            clearNetworkCache();
+        }
+
+        return rebuildNetworkCache(world);
+    }
+
+    private boolean hasValidNetworkCache() {
+        return cachedNetworkPositions != null && cachedNetworkVersion == networkCacheVersion;
+    }
+
+    @Nullable
+    private List<WireBlockEntity> resolveCachedNetwork(World world) {
+        List<BlockPos> positions = cachedNetworkPositions;
+        if (positions == null) return null;
+
+        List<WireBlockEntity> wires = new ArrayList<>(positions.size());
+        for (BlockPos wirePos : positions) {
+            if (!(world.getBlockEntity(wirePos) instanceof WireBlockEntity wire)) {
+                return null;
+            }
+            wires.add(wire);
+        }
+
+        return wires;
+    }
+
+    private List<WireBlockEntity> rebuildNetworkCache(World world) {
+        List<WireBlockEntity> network = collectConnectedWires(world, getPos());
+        updateNetworkCache(network);
+        return network;
     }
 
     private static List<WireBlockEntity> collectConnectedWires(World world, BlockPos startPos) {
@@ -151,6 +200,25 @@ public class WireBlockEntity extends BlockEntity {
         return connectedWires;
     }
 
+    private static void updateNetworkCache(List<WireBlockEntity> wires) {
+        if (wires.isEmpty()) return;
+
+        List<BlockPos> positions = new ArrayList<>(wires.size());
+        int totalPower = 0;
+
+        for (WireBlockEntity wire : wires) {
+            positions.add(wire.getPos().toImmutable());
+            totalPower += wire.currentPower;
+        }
+
+        List<BlockPos> cachedPositions = List.copyOf(positions);
+        for (WireBlockEntity wire : wires) {
+            wire.cachedNetworkPositions = cachedPositions;
+            wire.cachedNetworkPower = totalPower;
+            wire.cachedNetworkVersion = networkCacheVersion;
+        }
+    }
+
     private static void balancePower(List<WireBlockEntity> wires) {
         if (wires.isEmpty()) return;
 
@@ -172,29 +240,18 @@ public class WireBlockEntity extends BlockEntity {
         }
     }
 
-    private static boolean isNetworkOrigin(List<WireBlockEntity> wires, BlockPos pos) {
-        for (WireBlockEntity wire : wires) {
-            if (compareBlockPositions(wire.getPos(), pos) < 0) return false;
-        }
-        return true;
-    }
-
-    private static int compareBlockPositions(BlockPos first, BlockPos second) {
-        int xComparison = Integer.compare(first.getX(), second.getX());
-        if (xComparison != 0) return xComparison;
-
-        int yComparison = Integer.compare(first.getY(), second.getY());
-        if (yComparison != 0) return yComparison;
-
-        return Integer.compare(first.getZ(), second.getZ());
-    }
-
     private void setCurrentPower(int power) {
         int clampedPower = Math.max(0, Math.min(MAX_POWER, power));
         if (currentPower == clampedPower) return;
 
         currentPower = clampedPower;
         markDirty();
+    }
+
+    private void clearNetworkCache() {
+        cachedNetworkPositions = null;
+        cachedNetworkVersion = -1;
+        cachedNetworkPower = 0;
     }
 
     @Override

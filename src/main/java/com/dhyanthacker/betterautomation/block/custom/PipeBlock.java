@@ -72,6 +72,7 @@ public class PipeBlock extends BlockWithEntity {
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
                                                    WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        PipeBlockEntity.invalidateRouteCaches();
         return updateConnectionState(state, world, pos);
     }
 
@@ -85,6 +86,7 @@ public class PipeBlock extends BlockWithEntity {
         super.onStateReplaced(state, world, pos, newState, moved);
 
         if (state.getBlock() != newState.getBlock()) {
+            PipeBlockEntity.invalidateRouteCaches();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof PipeBlockEntity pipe) {
                 ItemScatterer.spawn(world, pos, pipe);

@@ -3,7 +3,6 @@ package com.dhyanthacker.betterautomation.block.custom;
 import com.dhyanthacker.betterautomation.block.api.PipeType;
 import com.dhyanthacker.betterautomation.block.api.PipeDirection;
 import com.dhyanthacker.betterautomation.block.api.PipeableBlockEntity;
-import com.dhyanthacker.betterautomation.block.entity.ModBlockEntities;
 import com.dhyanthacker.betterautomation.block.entity.custom.WireBlockEntity;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
@@ -52,8 +51,7 @@ public class WireBlock extends BlockWithEntity {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return validateTicker(type, ModBlockEntities.WIRE_BE,
-                (world1, pos, state1, blockEntity) -> blockEntity.tick(world1, pos, state1));
+        return null;
     }
 
     @Override
@@ -65,7 +63,17 @@ public class WireBlock extends BlockWithEntity {
     @Override
     protected BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState,
                                                    WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        WireBlockEntity.invalidateNetworkCaches();
         return updateConnectionState(state, world, pos);
+    }
+
+    @Override
+    protected void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
+
+        if (state.getBlock() != newState.getBlock()) {
+            WireBlockEntity.invalidateNetworkCaches();
+        }
     }
 
     @Override
