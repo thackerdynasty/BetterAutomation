@@ -1,7 +1,6 @@
 package com.dhyanthacker.betterautomation.block.api;
 
 import com.dhyanthacker.betterautomation.BetterAutomation;
-import com.dhyanthacker.betterautomation.block.entity.ImplementedInventory;
 import com.dhyanthacker.betterautomation.block.entity.custom.PipeBlockEntity;
 import com.dhyanthacker.betterautomation.block.entity.custom.WireBlockEntity;
 import net.minecraft.block.BlockState;
@@ -10,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 public abstract class PipeableBlockEntity extends BlockEntity {
     public PipeableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -22,37 +22,32 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     public abstract PipeType getOutputType();
 
     public boolean hasInputPipe() {
-        PipeDirection dir = getInputDirection();
-        BlockPos pos = this.getPos().offset(dir.toDirection(getWorld().getBlockState(getPos())));
-        BlockEntity entity = this.getWorld().getBlockEntity(pos);
-        if (getInputType() == PipeType.ITEM) {
-            return entity instanceof PipeBlockEntity;
-        } else if (getInputType() == PipeType.ENERGY) {
-            return entity instanceof WireBlockEntity;
+        PipeType inputType = getInputType();
+        if (inputType == PipeType.ITEM) {
+            return getDirectionalBlockEntity(getInputDirection()) instanceof PipeBlockEntity;
+        } else if (inputType == PipeType.ENERGY) {
+            return getDirectionalWire(getInputDirection()) != null;
         } else {
-            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + getOutputType());
-            return false; // For now, only ITEM and ENERGY pipes are supported
+            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + inputType);
+            return false;
         }
     }
+
     public boolean hasOutputPipe() {
-        PipeDirection dir = getOutputDirection();
-        BlockPos pos = this.getPos().offset(dir.toDirection(getWorld().getBlockState(getPos())));
-//        BetterAutomation.LOGGER.info("Checking for output pipe at: " + pos);
-        BlockEntity entity = this.getWorld().getBlockEntity(pos);
-        if (getOutputType() == PipeType.ITEM) {
-            return entity instanceof PipeBlockEntity;
-        } else if (getOutputType() == PipeType.ENERGY) {
-            return entity instanceof WireBlockEntity;
+        PipeType outputType = getOutputType();
+        if (outputType == PipeType.ITEM) {
+            return getDirectionalBlockEntity(getOutputDirection()) instanceof PipeBlockEntity;
+        } else if (outputType == PipeType.ENERGY) {
+            return getDirectionalWire(getOutputDirection()) != null;
         } else {
-            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + getOutputType());
-            return false; // For now, only ITEM and ENERGY pipes are supported
+            BetterAutomation.LOGGER.warn("Unsupported pipe type: " + outputType);
+            return false;
         }
     }
 
     public boolean copyToPipe(ItemStack stack) {
         if (hasOutputPipe() && getOutputType() == PipeType.ITEM) {
-            PipeBlockEntity outputPipe = (PipeBlockEntity) this.getWorld().getBlockEntity(
-                this.getPos().offset(getOutputDirection().toDirection(getWorld().getBlockState(getPos()))));
+            PipeBlockEntity outputPipe = (PipeBlockEntity) getDirectionalBlockEntity(getOutputDirection());
             if (outputPipe == null ||
                     outputPipe.getStack(0).getCount() >= outputPipe.getStack(0).getMaxCount()) return false;
             outputPipe.setStack(0, stack);
@@ -64,8 +59,7 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     }
     public ItemStack extractFromPipe() {
         if (hasInputPipe() && getInputType() == PipeType.ITEM) {
-            PipeBlockEntity inputPipe = (PipeBlockEntity) this.getWorld().getBlockEntity(
-                this.getPos().offset(getInputDirection().toDirection(getWorld().getBlockState(getPos()))));
+            PipeBlockEntity inputPipe = (PipeBlockEntity) getDirectionalBlockEntity(getInputDirection());
             if (inputPipe == null || inputPipe.isEmpty()) return ItemStack.EMPTY;
             ItemStack stack = inputPipe.getStack(0);
             if (stack.isEmpty()) return ItemStack.EMPTY;
@@ -77,40 +71,46 @@ public abstract class PipeableBlockEntity extends BlockEntity {
     }
 
     public int extractEnergy(int amount) {
-        if (hasInputPipe() && getInputType() == PipeType.ENERGY) {
-            WireBlockEntity inputWire = (WireBlockEntity) this.getWorld().getBlockEntity(
-                this.getPos().offset(getInputDirection().toDirection(getWorld().getBlockState(getPos()))));
-            if (inputWire == null) return 0;
-            int extracted = inputWire.extractPower(amount);
-            inputWire.markDirty();
-            return extracted;
-        }
-        return 0;
+        if (amount <= 0 || getInputType() != PipeType.ENERGY) return 0;
+
+        WireBlockEntity inputWire = getDirectionalWire(getInputDirection());
+        if (inputWire == null) return 0;
+
+        return inputWire.extractPower(amount);
     }
+
     public int insertEnergy(int amount) {
-        if (hasOutputPipe() && getOutputType() == PipeType.ENERGY) {
-            WireBlockEntity outputWire = (WireBlockEntity) this.getWorld().getBlockEntity(
-                this.getPos().offset(getOutputDirection().toDirection(getWorld().getBlockState(getPos()))));
-            if (outputWire == null) return 0;
-            int excess = outputWire.insertPower(amount);
-            outputWire.markDirty();
-            return excess; // Return excess power that couldn't be stored
-        }
-        return amount; // If no output pipe, return the full amount as excess
+        if (amount <= 0) return 0;
+        if (getOutputType() != PipeType.ENERGY) return amount;
+
+        WireBlockEntity outputWire = getDirectionalWire(getOutputDirection());
+        if (outputWire == null) return amount;
+
+        return outputWire.insertPower(amount);
     }
 
     public boolean inputWireHasPower() {
         return inputWireHasPower(1);
     }
+
     public boolean inputWireHasPower(int requiredPower) {
         if (getInputType() != PipeType.ENERGY) return false;
-        if (hasInputPipe()) {
-            WireBlockEntity inputWire = (WireBlockEntity) this.getWorld().getBlockEntity(
-                this.getPos().offset(getInputDirection().toDirection(getWorld().getBlockState(getPos()))));
-            if (inputWire != null) {
-                return inputWire.getCurrentPower() > 0;
-            }
-        }
-        return false;
+
+        WireBlockEntity inputWire = getDirectionalWire(getInputDirection());
+        return inputWire != null && inputWire.hasPower(requiredPower);
+    }
+
+    private BlockEntity getDirectionalBlockEntity(PipeDirection direction) {
+        World world = getWorld();
+        if (world == null || direction == null) return null;
+
+        Direction blockDirection = direction.toDirection(world.getBlockState(getPos()));
+        return world.getBlockEntity(getPos().offset(blockDirection));
+    }
+
+    private WireBlockEntity getDirectionalWire(PipeDirection direction) {
+        BlockEntity entity = getDirectionalBlockEntity(direction);
+        if (entity instanceof WireBlockEntity wire) return wire;
+        return null;
     }
 }

@@ -1,8 +1,59 @@
 {
   "variants": {
-    "facing=north": { "model": "betterautomation:block/wire" },
-    "facing=south": { "model": "betterautomation:block/wire", "y": 180 },
-    "facing=east":  { "model": "betterautomation:block/wire", "y": 90 },
-    "facing=west":  { "model": "betterautomation:block/wire", "y": 270 }
+    "facing=north,shape=straight": { "model": "betterautomation:block/wire" },
+    "facing=south,shape=straight": { "model": "betterautomation:block/wire", "y": 180 },
+    "facing=east,shape=straight": { "model": "betterautomation:block/wire", "y": 90 },
+    "facing=west,shape=straight": { "model": "betterautomation:block/wire", "y": 270 },
+    "facing=up,shape=straight": { "model": "betterautomation:block/wire", "x": 90, "y": 90 },
+    "facing=down,shape=straight": { "model": "betterautomation:block/wire", "x": 90, "y": 90 },
+
+    "facing=north,shape=corner": { "model": "betterautomation:block/wire_corner", "y": 90 },
+    "facing=east,shape=corner": { "model": "betterautomation:block/wire_corner", "y": 180 },
+    "facing=south,shape=corner": { "model": "betterautomation:block/wire_corner", "y": 270 },
+    "facing=west,shape=corner": { "model": "betterautomation:block/wire_corner" },
+    "facing=up,shape=corner": { "model": "betterautomation:block/wire_corner" },
+    "facing=down,shape=corner": { "model": "betterautomation:block/wire_corner" },
+
+    "facing=north,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270, "y": 90 },
+    "facing=east,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270, "y": 180 },
+    "facing=south,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270, "y": 270 },
+    "facing=west,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270 },
+    "facing=up,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270 },
+    "facing=down,shape=corner_up": { "model": "betterautomation:block/wire_corner", "x": 270 },
+
+    "facing=north,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90, "y": 90 },
+    "facing=east,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90, "y": 180 },
+    "facing=south,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90, "y": 270 },
+    "facing=west,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90 },
+    "facing=up,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90 },
+    "facing=down,shape=corner_down": { "model": "betterautomation:block/wire_corner", "x": 90 },
+
+    "facing=north,shape=threeway": { "model": "betterautomation:block/wire_threeway", "y": 90 },
+    "facing=east,shape=threeway": { "model": "betterautomation:block/wire_threeway", "y": 180 },
+    "facing=south,shape=threeway": { "model": "betterautomation:block/wire_threeway", "y": 270 },
+    "facing=west,shape=threeway": { "model": "betterautomation:block/wire_threeway" },
+    "facing=up,shape=threeway": { "model": "betterautomation:block/wire_threeway" },
+    "facing=down,shape=threeway": { "model": "betterautomation:block/wire_threeway" },
+
+    "facing=north,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90, "y": 90 },
+    "facing=east,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90, "y": 180 },
+    "facing=south,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90, "y": 270 },
+    "facing=west,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90 },
+    "facing=up,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90 },
+    "facing=down,shape=threeway_vertical": { "model": "betterautomation:block/wire_threeway", "x": 90 },
+
+    "facing=north,shape=cross": { "model": "betterautomation:block/wire_cross" },
+    "facing=east,shape=cross": { "model": "betterautomation:block/wire_cross", "y": 90 },
+    "facing=south,shape=cross": { "model": "betterautomation:block/wire_cross", "y": 180 },
+    "facing=west,shape=cross": { "model": "betterautomation:block/wire_cross", "y": 270 },
+    "facing=up,shape=cross": { "model": "betterautomation:block/wire_cross" },
+    "facing=down,shape=cross": { "model": "betterautomation:block/wire_cross" },
+
+    "facing=north,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90 },
+    "facing=south,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90, "y": 180 },
+    "facing=east,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90, "y": 90 },
+    "facing=west,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90, "y": 270 },
+    "facing=up,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90 },
+    "facing=down,shape=cross_vertical": { "model": "betterautomation:block/wire_cross", "x": 90 }
   }
 }

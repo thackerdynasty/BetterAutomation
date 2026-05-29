@@ -14,7 +14,6 @@ import com.dhyanthacker.betterautomation.recipe.ModRecipes;
 import com.dhyanthacker.betterautomation.screen.custom.handler.ElectricFurnaceScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -284,19 +283,5 @@ public class ElectricFurnaceBlockEntity extends PipeableBlockEntity implements I
     @Override
     public PipeType getOutputType() {
         return PipeType.ITEM;
-    }
-
-    @Override
-    public boolean hasInputPipe() {
-        PipeDirection dir = getInputDirection();
-        BlockPos pos = this.getPos().offset(dir.toDirection(getWorld().getBlockState(getPos())));
-        BlockEntity entity = this.getWorld().getBlockEntity(pos);
-        if (getInputType() == PipeType.ITEM) {
-            return entity instanceof PipeBlockEntity;
-        } else if (getInputType() == PipeType.ENERGY) {
-            return entity instanceof WireBlockEntity;
-        } else {
-            return false; // For now, only ITEM and ENERGY pipes are supported
-        }
     }
 }
